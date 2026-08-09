@@ -179,11 +179,17 @@ normativ gefordert. Ohne sie ist ein mehrseitiger Plan fuer den Elektrotechniker
 Querverweissystem das Blattnummer + Koordinate anzeigt. Dies ist ein **fehlendes
 KiCad-Feature**, nicht nur ein Import-Bug.
 
+**Verifiziert (2026-08-09):** KiCad zeigt in der GUI die **Seitennummer** des
+verweisenden Blatts (z. B. "2"), aber **nicht** die Spalte/Reihe (Row/Col).
+Eagle zeigt das vollstaendige Format NETZNAME/BLATT.SPALTEREIHE (z. B. L1/2.2A).
+Das KiCad-Aequivalent ist damit nur ein Teilergebnis -- fuer normgerechte
+Stromlaufplaene nach DIN EN 61082 nicht ausreichend.
+
 ---
 
-### Problem 9 -- kicad-cli expandiert  nicht
+### Problem 9 -- kicad-cli expandiert ${INTERSHEET_REFS} nicht
 
-**Schweregrad:** HOCH
+**Schweregrad:** HOCH | **Status: VERIFIZIERT**
 
 KiCad speichert seitenuebergreifende Querverweise als Property ${INTERSHEET_REFS}
 in der .kicad_sch-Datei. In der KiCad-GUI werden diese korrekt aufgeloest und
@@ -192,15 +198,18 @@ angezeigt (sofern intersheets_ref_show: true im Projekt gesetzt ist).
 Der **CLI-Exporter** (kicad-cli sch export pdf) expandiert ${INTERSHEET_REFS}
 jedoch **nicht** -- die Felder bleiben leer. Verifiziert mit:
 
-`ash
+```bash
 # intersheets_ref_show: true im .kicad_pro
 # (hide no) in allen Intersheetrefs-Bloecken der .kicad_sch
 kicad-cli sch export pdf stern-dreieck-anlauf_multipage.kicad_sch
-# Ergebnis:  = leer im PDF
-`
+# Ergebnis: ${INTERSHEET_REFS} = leer im PDF
+```
 
 Dies betrifft **alle** Workflows die kicad-cli zur automatisierten PDF-Erzeugung
 verwenden (CI/CD, Makefile, Skripte).
+
+**Workaround:** PDF ueber die KiCad GUI exportieren (Datei -> Schaltplan plotten -> PDF).
+Die GUI loest ${INTERSHEET_REFS} korrekt auf.
 
 ---
 
