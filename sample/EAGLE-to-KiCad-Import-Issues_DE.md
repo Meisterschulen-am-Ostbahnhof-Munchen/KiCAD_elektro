@@ -213,6 +213,38 @@ Die GUI loest ${INTERSHEET_REFS} korrekt auf.
 
 ---
 
+### Problem 11 -- Seitenreferenzen ohne Hierarchie: jede Seite verweist auf alle anderen
+
+**Schweregrad:** HOCH | **Status: VERIFIZIERT**
+
+Bei einem mehrseitigen Schaltplan mit einem Netz das auf mehreren Seiten vorkommt
+zeigt KiCad's ${INTERSHEET_REFS} fuer jede Seite **alle anderen Seiten** auf
+denen dieses Netz einen Label hat -- ohne Filterung, ohne Hierarchie,
+ohne Koordinatenangabe.
+
+**Beobachtetes Verhalten** (6-seitiger Plan, Netz erscheint auf allen Seiten):
+
+| Seite | KiCad zeigt | Eagle wuerde zeigen |
+|-------|-------------|---------------------|
+| 1 | 2 3 4 5 6 | nur Seiten mit direkter Verbindung + Koordinate |
+| 2 | 1 3 4 5 6 | nur Seiten mit direkter Verbindung + Koordinate |
+| 3 | 1 2 4 5 6 | nur Seiten mit direkter Verbindung + Koordinate |
+
+In der Praxis entsteht dadurch eine **Informationsflut** statt einer
+nuetzlichen Navigation: Ein Netz wie PE oder N das auf allen 6 Seiten
+vorkommt verweist von jeder Seite auf alle anderen 5 -- der Elektrotechniker
+kann nicht erkennen **wohin** das Netz gefuehrt wird.
+
+**Eagle-Verhalten (korrekt):** Die Querverweise zeigen ausschliesslich die
+Stellen wo das Netz tatsaechlich ein- oder austritt (Drahtende an Seite),
+mit vollstaendiger Koordinate (NETZNAME/BLATT.SPALTEREIHE).
+
+**Ursache:** KiCad's ${INTERSHEET_REFS} macht eine einfache Namensuche ueber
+alle Blaetter -- kein topologisches Routing, keine Unterscheidung zwischen
+"Netz durchlaeuft diese Seite" und "Netz endet/beginnt hier".
+
+---
+
 ## Zusammenfassung
 
 | # | Problem | Schweregrad | KiCad-Aequivalent vorhanden? |
@@ -226,7 +258,8 @@ Die GUI loest ${INTERSHEET_REFS} korrekt auf.
 | 7 | Netz-Label-Konkatenierung L3+N | MITTEL | Ja, Parser-Bug |
 | 8 | Seitenuebergreifende Netz-Querverweise fehlen | KRITISCH | Nein (KiCad-Feature fehlt grundlegend) |
 | 9 | kicad-cli expandiert ${INTERSHEET_REFS} nicht | HOCH | Nein (CLI-Bug) |
-| 10 | Doppelter Zeichnungsrahmen nach Import | HOCH | Ja, Workaround: --exclude-drawing-sheet |
+| 10 | Doppelter Zeichnungsrahmen nach Import | HOCH | Ja, Workaround: empty.kicad_wks |
+| 11 | Seitenreferenzen ohne Hierarchie (alle auf alle) | HOCH | Nein (grundlegendes KiCad-Designproblem) |
 
 ---
 

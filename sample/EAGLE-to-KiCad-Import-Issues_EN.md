@@ -263,6 +263,37 @@ kicad-cli sch export pdf --exclude-drawing-sheet --output out.pdf project.kicad_
 
 ---
 
+### Problem 11 -- Inter-sheet references without hierarchy: every page references all others
+
+**Severity:** HIGH | **Status: VERIFIED**
+
+In a multi-page schematic where a net appears on multiple sheets, KiCad's
+`${INTERSHEET_REFS}` shows **every other sheet** on which that net has a label --
+without filtering, without hierarchy, without any coordinate information.
+
+**Observed behaviour** (6-sheet schematic, net appears on all sheets):
+
+| Sheet | KiCad shows | Eagle would show |
+|-------|-------------|------------------|
+| 1 | 2 3 4 5 6 | only sheets with a direct connection + coordinate |
+| 2 | 1 3 4 5 6 | only sheets with a direct connection + coordinate |
+| 3 | 1 2 4 5 6 | only sheets with a direct connection + coordinate |
+
+In practice this creates **information overload** rather than useful navigation:
+a net such as PE or N that appears on all 6 sheets generates a reference
+from every sheet to all other 5 -- the engineer cannot determine
+**where** the net actually goes.
+
+**Eagle behaviour (correct):** Cross-references show only the locations where
+the net actually enters or exits a sheet (wire end at page boundary),
+with full coordinates (`NETNAME/SHEET.COLUMNROW`).
+
+**Root cause:** KiCad's `${INTERSHEET_REFS}` performs a simple name search
+across all sheets -- no topological routing, no distinction between
+"net passes through this sheet" and "net terminates/originates here".
+
+---
+
 ## Summary
 
 | # | Problem | Severity | KiCad equivalent available? |
@@ -277,6 +308,7 @@ kicad-cli sch export pdf --exclude-drawing-sheet --output out.pdf project.kicad_
 | 8 | Multi-page net cross-references missing | CRITICAL | No (missing KiCad feature) |
 | 9 | kicad-cli does not expand ${INTERSHEET_REFS} | HIGH | No (CLI bug) |
 | 10 | Duplicate drawing frame after import | HIGH | Yes, workaround: empty.kicad_wks |
+| 11 | Inter-sheet refs without hierarchy (all-to-all) | HIGH | No (fundamental KiCad design issue) |
 
 ---
 
