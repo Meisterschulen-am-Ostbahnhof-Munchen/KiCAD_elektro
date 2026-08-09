@@ -11,6 +11,32 @@ These libraries were originally distributed as EAGLE `.lbr` files under the `ele
 
 They were taken from the sources above and converted to KiCad's native `.kicad_sym` format.
 
+## Library Overview
+
+Each library has its own folder with a `README.md` listing all symbols as rendered SVG images:
+
+| Library | Symbols |
+|---|---|
+| [e-elektro-zeichnungsrahmen](e-elektro-zeichnungsrahmen/README.md) | Drawing frames |
+| [e-elektromechanische-antriebe](e-elektromechanische-antriebe/README.md) | Electromechanical drives |
+| [e-halbleiter](e-halbleiter/README.md) | Semiconductors |
+| [e-klemmen](e-klemmen/README.md) | Terminals |
+| [e-kondensatoren](e-kondensatoren/README.md) | Capacitors |
+| [e-lampen-signalisation](e-lampen-signalisation/README.md) | Lamps and signalling |
+| [e-messfuehler](e-messfuehler/README.md) | Sensors |
+| [e-messinstrumente](e-messinstrumente/README.md) | Measuring instruments |
+| [e-motoren](e-motoren/README.md) | Motors |
+| [e-motorschutzschalter](e-motorschutzschalter/README.md) | Motor protection switches |
+| [e-schalter](e-schalter/README.md) | Switches |
+| [e-schuetze-relais](e-schuetze-relais/README.md) | Contactors and relays |
+| [e-sicherungen](e-sicherungen/README.md) | Fuses |
+| [e-sps](e-sps/README.md) | PLCs |
+| [e-spulen-transformatoren](e-spulen-transformatoren/README.md) | Coils and transformers |
+| [e-steckverbinder](e-steckverbinder/README.md) | Connectors |
+| [e-stromversorgungselemente](e-stromversorgungselemente/README.md) | Power supply elements |
+| [e-symbole](e-symbole/README.md) | General symbols |
+| [eib-busch-jaeger](eib-busch-jaeger/README.md) | EIB / Busch-Jaeger |
+
 ## Credits
 
 - **Original Author:** librarian@cadsoft.de — likely [Alfred Zaffran](https://www.az-cad.de/) at the time
