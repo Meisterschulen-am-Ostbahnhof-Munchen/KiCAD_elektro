@@ -1,6 +1,4 @@
-# Component reference designators (F1, Q2, K1...) missing after Eagle import
-
-# Description
+## Description
 
 When importing an EAGLE schematic (`.sch`) into KiCad, component reference designators (F1, F2, F3, F4, Q1-Q4, K1, S1, S2, M1, X1-X3) are completely missing from the imported schematic symbols.
 
@@ -8,14 +6,14 @@ In EAGLE, these reference designators reside on Layer 95 (Names) and are clearly
 
 **Expected behavior:** EAGLE component names (Layer 95) should be imported into the KiCad `Reference` field for each symbol.
 
-# Steps to reproduce
+## Steps to reproduce
 
 1. Open KiCad Schematic Editor.
 2. Import an EAGLE schematic containing named components (`File` -> `Import` -> `Non-KiCad Schematic...` -> select EAGLE `.sch`).
 3. Inspect the imported symbols in the schematic editor.
 4. Notice that component reference designators (F1, Q2, K1, etc.) are missing or empty.
 
-# KiCad Version
+## KiCad Version
 
 ```
 Application: KiCad x64 on x64

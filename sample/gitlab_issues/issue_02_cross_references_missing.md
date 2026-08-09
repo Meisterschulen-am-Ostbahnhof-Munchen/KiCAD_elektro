@@ -1,6 +1,4 @@
-# Cross-references (/%S.%C%R format) not imported from Eagle
-
-# Description
+## Description
 
 EAGLE automatically generates cross-references in the format `/%S.%C%R` (sheet.column+row) for multi-page schematics and split symbols (e.g. contactor coil on sheet 1, auxiliary contacts on sheet 2). EAGLE stores this cross-reference format in the schematic root: `<schematic xreflabel="%F%N/%S.%C%R" xrefpart="/%S.%C%R">`.
 
@@ -8,14 +6,14 @@ During EAGLE schematic import into KiCad, these cross-reference strings (such as
 
 **Expected behavior:** EAGLE cross-references should at minimum be imported as text annotations near the respective symbol pins so that historical schematic references are preserved.
 
-# Steps to reproduce
+## Steps to reproduce
 
 1. Open KiCad Schematic Editor.
 2. Import an EAGLE schematic (`.sch`) containing split symbols (e.g. contactor coils & contacts) with EAGLE cross-references.
 3. Inspect the imported symbols.
 4. Notice that cross-reference annotations (e.g. `/1.13B`) are completely missing.
 
-# KiCad Version
+## KiCad Version
 
 ```
 Application: KiCad x64 on x64

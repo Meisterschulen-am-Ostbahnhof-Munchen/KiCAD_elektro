@@ -1,6 +1,4 @@
-# Duplicate drawing frame after Eagle import (symbol + KiCad page border)
-
-# Description
+## Description
 
 When importing an EAGLE schematic containing a drawing frame symbol (e.g. `RAHMEN_A4_8Z-19S`), the EAGLE importer performs two conflicting actions simultaneously:
 1. Sets page dimensions `(paper "User" 322.88 244.27)` triggering KiCad's internal page border rendering.
@@ -10,14 +8,14 @@ As a result, KiCad renders **two overlapping frames** (KiCad's built-in page bor
 
 **Expected behavior:** The importer should either suppress KiCad's default page border (reference an empty `.kicad_wks`) or populate KiCad's title block without importing the frame symbol as a graphic component.
 
-# Steps to reproduce
+## Steps to reproduce
 
 1. Import an EAGLE schematic containing a drawing frame symbol into KiCad.
 2. Export PDF via GUI or `kicad-cli sch export pdf`.
 3. Open exported PDF or view schematic editor canvas.
 4. Notice duplicate overlapping drawing frames.
 
-# KiCad Version
+## KiCad Version
 
 ```
 Application: KiCad x64 on x64

@@ -1,6 +1,4 @@
-# kicad-cli sch export pdf ignores flat top-level sheets in project
-
-# Description
+## Description
 
 Running `kicad-cli sch export pdf --output out.pdf project_page1.kicad_sch` exports only the specified schematic file. If a project consists of multiple independent ("flat") top-level sheets (the standard structure produced by the EAGLE importer), all other project sheets are ignored.
 
@@ -8,14 +6,14 @@ In contrast, the KiCad GUI Page Navigator recognizes all project sheets and plot
 
 **Expected behavior:** `kicad-cli` should recognize all top-level sheets in a project (via `.kicad_pro`) and export them into a single multi-page PDF.
 
-# Steps to reproduce
+## Steps to reproduce
 
 1. Import a multi-page EAGLE project (producing `page1.kicad_sch`, `page2.kicad_sch` under `project.kicad_pro`).
 2. Run `kicad-cli sch export pdf --output out.pdf page1.kicad_sch`.
 3. Open `out.pdf`.
 4. Notice that `out.pdf` contains only page 1 instead of all project sheets.
 
-# KiCad Version
+## KiCad Version
 
 ```
 Application: KiCad x64 on x64

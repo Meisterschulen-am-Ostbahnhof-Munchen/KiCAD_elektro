@@ -1,6 +1,4 @@
-# Inter-sheet net references show all pages instead of only connected pages
-
-# Description
+## Description
 
 KiCad's `${INTERSHEET_REFS}` variable lists **every other sheet** in the project where a label with the same net name exists, regardless of wire topology or whether the net actually enters or exits that sheet.
 
@@ -8,14 +6,14 @@ In a 6-page project where a common net (such as PE or N) is present on all sheet
 
 **Expected behavior (EAGLE model):** Net cross-references should perform topological filtering, showing only sheets with direct wire connections along with grid coordinates (`NETNAME/SHEET.COLUMNROW`).
 
-# Steps to reproduce
+## Steps to reproduce
 
 1. Create or import a multi-sheet project (e.g. 6 sheets) with common net labels (e.g. PE, N) present on every sheet.
 2. Enable `intersheets_ref_show: true` and make `${INTERSHEET_REFS}` visible on net labels.
 3. Inspect net labels on sheet 1.
 4. Notice that page references list every sheet (`2 3 4 5 6`) indiscriminately.
 
-# KiCad Version
+## KiCad Version
 
 ```
 Application: KiCad x64 on x64

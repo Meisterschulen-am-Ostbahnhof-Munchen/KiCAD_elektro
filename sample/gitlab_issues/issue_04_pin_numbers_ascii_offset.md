@@ -1,6 +1,4 @@
-# Pin numbers encoded as ASCII offset, garbled characters instead of 95-98
-
-# Description
+## Description
 
 EAGLE symbols for motor circuit breakers use IEC-standardized contact numbers `95`, `96` (NC) and `97`, `98` (NO) for the thermal overload release mechanism.
 
@@ -8,14 +6,14 @@ After importing into KiCad, these pin numbers are garbled into ASCII characters 
 
 **Expected behavior:** Pin numbers `95`, `96`, `97`, `98` should be preserved as literal string pin numbers "95", "96", "97", "98".
 
-# Steps to reproduce
+## Steps to reproduce
 
 1. Open KiCad Schematic Editor.
 2. Import an EAGLE schematic containing motor protection switch symbols with contacts 95-98.
 3. Inspect the auxiliary contact pin numbers of the motor protection switch.
 4. Notice that pin numbers appear as garbled ASCII characters (e.g. `:`, `;`, `<`, `=`).
 
-# KiCad Version
+## KiCad Version
 
 ```
 Application: KiCad x64 on x64

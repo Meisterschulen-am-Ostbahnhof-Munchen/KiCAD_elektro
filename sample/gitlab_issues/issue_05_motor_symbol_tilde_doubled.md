@@ -1,6 +1,4 @@
-# AC tilde notation doubled: 3~ becomes 3~~ in motor symbol
-
-# Description
+## Description
 
 The three-phase AC notation string `3~` in EAGLE motor symbols (`M 3~`) is rendered as `3~~` after importing into KiCad.
 
@@ -8,14 +6,14 @@ Because the tilde (`~`) character is used as an overbar formatting prefix in KiC
 
 **Expected behavior:** The text literal `3~` should be properly escaped during import so that it renders as `3~`.
 
-# Steps to reproduce
+## Steps to reproduce
 
 1. Open KiCad Schematic Editor.
 2. Import an EAGLE schematic containing a 3-phase motor symbol (`M 3~`).
 3. Inspect the motor symbol label.
 4. Notice the text renders as `3~~` instead of `3~`.
 
-# KiCad Version
+## KiCad Version
 
 ```
 Application: KiCad x64 on x64

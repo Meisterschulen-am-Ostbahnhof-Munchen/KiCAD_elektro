@@ -1,6 +1,4 @@
-# kicad-cli sch export pdf does not expand ${INTERSHEET_REFS} variable
-
-# Description
+## Description
 
 KiCad stores inter-sheet cross-references as property `${INTERSHEET_REFS}` in `.kicad_sch` files. In the KiCad GUI, these variables are correctly expanded and printed when `intersheets_ref_show: true` is set in the project file.
 
@@ -8,7 +6,7 @@ However, the CLI exporter (`kicad-cli sch export pdf`) does **not** expand `${IN
 
 **Expected behavior:** `kicad-cli sch export pdf` should expand `${INTERSHEET_REFS}` variables identically to GUI PDF export.
 
-# Steps to reproduce
+## Steps to reproduce
 
 1. Prepare a multi-sheet project with `intersheets_ref_show: true` in `.kicad_pro` and `(hide no)` on `Intersheetrefs` properties in `.kicad_sch`.
 2. Run command line export:
@@ -16,7 +14,7 @@ However, the CLI exporter (`kicad-cli sch export pdf`) does **not** expand `${IN
 3. Open `out.pdf` and check inter-sheet reference fields.
 4. Notice that `${INTERSHEET_REFS}` fields are empty in the CLI-exported PDF, whereas GUI export displays them correctly.
 
-# KiCad Version
+## KiCad Version
 
 ```
 Application: KiCad x64 on x64

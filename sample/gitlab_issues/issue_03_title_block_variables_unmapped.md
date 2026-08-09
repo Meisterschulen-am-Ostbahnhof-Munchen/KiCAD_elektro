@@ -1,6 +1,4 @@
-# Title block variables (>DATUM, >KUNDE...) not mapped to KiCad title block fields
-
-# Description
+## Description
 
 EAGLE title block symbols use placeholder attributes of the form `>VARIABLENAME` (e.g. `>DATUM`, `>KUNDE`, `>FUNKTION`, `>ZEICHNUNGS_NR`, `>ERSTELLER`). In EAGLE, these placeholders are dynamically replaced by schematic attribute values.
 
@@ -12,14 +10,14 @@ Upon importing into KiCad, these literal strings (`>DATUM`, `>BEARBEITET`, etc.)
 - `>FUNKTION` / `>KUNDE` -> `Title` / `Company`
 - `>ERSTELLER` / `>BEARBEITET` -> `Comment 1`
 
-# Steps to reproduce
+## Steps to reproduce
 
 1. Open KiCad Schematic Editor.
 2. Import an EAGLE schematic containing a title block symbol with `>VARIABLE` placeholders.
 3. Inspect the imported title block.
 4. Notice that raw text strings like `>DATUM` or `>BEARBEITET` appear as unexpanded text in the schematic.
 
-# KiCad Version
+## KiCad Version
 
 ```
 Application: KiCad x64 on x64
