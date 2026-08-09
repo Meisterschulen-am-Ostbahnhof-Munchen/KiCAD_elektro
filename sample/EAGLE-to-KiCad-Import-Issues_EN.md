@@ -352,202 +352,500 @@ hence the cleaner result.
 
 ---
 
-## Planned KiCad GitLab Issues
+## Planned KiCad GitLab Issues (Ready to Copy)
 
 ### Issue 1 -- Component reference designators (F1, Q2, K1...) missing after Eagle import
 
-**Module:** `eeschema/importers/schematic_eagle_plugin.cpp`
+**Module:** `eeschema/importers/schematic_eagle_plugin.cpp`  
 **Labels:** `Eagle import`, `bug`, `eeschema`
 
-Eagle stores component names on Layer 95 (Names). These are not transferred
-as reference designators to KiCad symbols during import.
+## Description
+
+When importing an EAGLE schematic (`.sch`) into KiCad, component reference designators (F1, F2, F3, F4, Q1-Q4, K1, S1, S2, M1, X1-X3) are completely missing from the imported schematic symbols.
+
+In EAGLE, these reference designators reside on Layer 95 (Names) and are clearly visible in the schematic and exported PDF. In KiCad, the symbol reference fields are empty or not populated from the EAGLE name layer.
+
+**Expected behavior:** EAGLE component names (Layer 95) should be imported into the KiCad `Reference` field for each symbol.
+
+## Steps to reproduce
+
+1. Open KiCad Schematic Editor.
+2. Import an EAGLE schematic containing named components (`File` -> `Import` -> `Non-KiCad Schematic...` -> select EAGLE `.sch`).
+3. Inspect the imported symbols in the schematic editor.
+4. Notice that component reference designators (F1, Q2, K1, etc.) are missing or empty.
+
+## KiCad Version
+
+```
+Application: KiCad x64 on x64
+
+Version: 10.0.5, release build
+
+Libraries:
+	wxWidgets 3.3.2 
+	FreeType 2.13.3
+	HarfBuzz 12.3.0
+	FontConfig 2.17.1
+
+Platform: Windows 11 (Erzeugungsversion 26200), 64-bit Edition, 64 bit, Little endian, wxMSW
+OpenGL: Intel, Intel(R) Graphics, 4.6.0 - Build 32.0.101.8801
+
+	wxWidgets: 3.3.2 (wchar_t,STL containers)
+	Boost: 1.90.0
+	OCC: 7.9.2
+	Curl: 8.18.0
+	ngspice: 46
+	Compiler: Visual C++ 1944 without C++ ABI
+	KICAD_IPC_API=ON
+	KICAD_USE_PCH=OFF
+
+Locale: 
+	Lang: de_DE
+	Enc: UTF-8
+	Num: 1.234,5
+	Encoded кΩ丈: D0BACEA9E4B888 (sys), D0BACEA9E4B888 (utf8)
+```
 
 ---
 
 ### Issue 2 -- Cross-references (/%S.%C%R format) not imported from Eagle
 
-**Module:** `eeschema/importers/schematic_eagle_plugin.cpp`
+**Module:** `eeschema/importers/schematic_eagle_plugin.cpp`  
 **Labels:** `Eagle import`, `enhancement`, `eeschema`
 
-Eagle's xreflabel/xrefpart cross-reference system has no direct KiCad equivalent.
-As a workaround these should at minimum be preserved as **text annotations**
-at the respective pin instead of being lost entirely.
+## Description
+
+EAGLE automatically generates cross-references in the format `/%S.%C%R` (sheet.column+row) for multi-page schematics and split symbols (e.g. contactor coil on sheet 1, auxiliary contacts on sheet 2). EAGLE stores this cross-reference format in the schematic root: `<schematic xreflabel="%F%N/%S.%C%R" xrefpart="/%S.%C%R">`.
+
+During EAGLE schematic import into KiCad, these cross-reference strings (such as `/1.13B`, `/1.13D`, `/1.16D`) are completely ignored and lost.
+
+**Expected behavior:** EAGLE cross-references should at minimum be imported as text annotations near the respective symbol pins so that historical schematic references are preserved.
+
+## Steps to reproduce
+
+1. Open KiCad Schematic Editor.
+2. Import an EAGLE schematic (`.sch`) containing split symbols (e.g. contactor coils & contacts) with EAGLE cross-references.
+3. Inspect the imported symbols.
+4. Notice that cross-reference annotations (e.g. `/1.13B`) are completely missing.
+
+## KiCad Version
+
+```
+Application: KiCad x64 on x64
+
+Version: 10.0.5, release build
+
+Libraries:
+	wxWidgets 3.3.2 
+	FreeType 2.13.3
+	HarfBuzz 12.3.0
+	FontConfig 2.17.1
+
+Platform: Windows 11 (Erzeugungsversion 26200), 64-bit Edition, 64 bit, Little endian, wxMSW
+OpenGL: Intel, Intel(R) Graphics, 4.6.0 - Build 32.0.101.8801
+
+	wxWidgets: 3.3.2 (wchar_t,STL containers)
+	Boost: 1.90.0
+	OCC: 7.9.2
+	Curl: 8.18.0
+	ngspice: 46
+	Compiler: Visual C++ 1944 without C++ ABI
+	KICAD_IPC_API=ON
+	KICAD_USE_PCH=OFF
+
+Locale: 
+	Lang: de_DE
+	Enc: UTF-8
+	Num: 1.234,5
+	Encoded кΩ丈: D0BACEA9E4B888 (sys), D0BACEA9E4B888 (utf8)
+```
 
 ---
 
 ### Issue 3 -- Title block variables (>DATUM, >KUNDE...) not mapped to KiCad title block fields
 
-**Module:** `eeschema/importers/schematic_eagle_plugin.cpp`
+**Module:** `eeschema/importers/schematic_eagle_plugin.cpp`  
 **Labels:** `Eagle import`, `enhancement`, `eeschema`, `title block`
 
-Eagle title block placeholders `>VARIABLENAME` should be mapped to KiCad
-title block fields:
+## Description
 
-| Eagle Variable | KiCad Title Block Field |
-|----------------|------------------------|
-| >DATUM | Date |
-| >ERSTELLER / >BEARBEITET | Comment 1 |
-| >ZEICHNUNGS_NR | Rev |
-| >FUNKTION / >KUNDE | Title / Company |
+EAGLE title block symbols use placeholder attributes of the form `>VARIABLENAME` (e.g. `>DATUM`, `>KUNDE`, `>FUNKTION`, `>ZEICHNUNGS_NR`, `>ERSTELLER`). In EAGLE, these placeholders are dynamically replaced by schematic attribute values.
+
+Upon importing into KiCad, these literal strings (`>DATUM`, `>BEARBEITET`, etc.) are left as raw unexpanded text strings rather than being mapped to KiCad title block properties (`Date`, `Revision`, `Title`, `Company`, `Comment 1`).
+
+**Expected behavior:** Common EAGLE title block variables should be mapped to KiCad title block fields:
+- `>DATUM` -> `Date`
+- `>ZEICHNUNGS_NR` -> `Revision`
+- `>FUNKTION` / `>KUNDE` -> `Title` / `Company`
+- `>ERSTELLER` / `>BEARBEITET` -> `Comment 1`
+
+## Steps to reproduce
+
+1. Open KiCad Schematic Editor.
+2. Import an EAGLE schematic containing a title block symbol with `>VARIABLE` placeholders.
+3. Inspect the imported title block.
+4. Notice that raw text strings like `>DATUM` or `>BEARBEITET` appear as unexpanded text in the schematic.
+
+## KiCad Version
+
+```
+Application: KiCad x64 on x64
+
+Version: 10.0.5, release build
+
+Libraries:
+	wxWidgets 3.3.2 
+	FreeType 2.13.3
+	HarfBuzz 12.3.0
+	FontConfig 2.17.1
+
+Platform: Windows 11 (Erzeugungsversion 26200), 64-bit Edition, 64 bit, Little endian, wxMSW
+OpenGL: Intel, Intel(R) Graphics, 4.6.0 - Build 32.0.101.8801
+
+	wxWidgets: 3.3.2 (wchar_t,STL containers)
+	Boost: 1.90.0
+	OCC: 7.9.2
+	Curl: 8.18.0
+	ngspice: 46
+	Compiler: Visual C++ 1944 without C++ ABI
+	KICAD_IPC_API=ON
+	KICAD_USE_PCH=OFF
+
+Locale: 
+	Lang: de_DE
+	Enc: UTF-8
+	Num: 1.234,5
+	Encoded кΩ丈: D0BACEA9E4B888 (sys), D0BACEA9E4B888 (utf8)
+```
 
 ---
 
 ### Issue 4 -- Pin numbers encoded as ASCII offset, garbled characters instead of 95-98
 
-**Module:** `eeschema/importers/schematic_eagle_plugin.cpp`
+**Module:** `eeschema/importers/schematic_eagle_plugin.cpp`  
 **Labels:** `Eagle import`, `bug`, `eeschema`
 
-IEC contact numbers 95-98 (motor circuit breaker auxiliary contacts) are
-rendered as ASCII characters `:;<=>?@`. Suspected encoding bug: numeric pin
-designators are incorrectly shifted by 48 or 32.
+## Description
+
+EAGLE symbols for motor circuit breakers use IEC-standardized contact numbers `95`, `96` (NC) and `97`, `98` (NO) for the thermal overload release mechanism.
+
+After importing into KiCad, these pin numbers are garbled into ASCII characters `:`, `;`, `<`, `=`, `>`, `?`, `@`. This indicates an encoding bug during symbol pin number mapping (ASCII offset of 48).
+
+**Expected behavior:** Pin numbers `95`, `96`, `97`, `98` should be preserved as literal string pin numbers "95", "96", "97", "98".
+
+## Steps to reproduce
+
+1. Open KiCad Schematic Editor.
+2. Import an EAGLE schematic containing motor protection switch symbols with contacts 95-98.
+3. Inspect the auxiliary contact pin numbers of the motor protection switch.
+4. Notice that pin numbers appear as garbled ASCII characters (e.g. `:`, `;`, `<`, `=`).
+
+## KiCad Version
+
+```
+Application: KiCad x64 on x64
+
+Version: 10.0.5, release build
+
+Libraries:
+	wxWidgets 3.3.2 
+	FreeType 2.13.3
+	HarfBuzz 12.3.0
+	FontConfig 2.17.1
+
+Platform: Windows 11 (Erzeugungsversion 26200), 64-bit Edition, 64 bit, Little endian, wxMSW
+OpenGL: Intel, Intel(R) Graphics, 4.6.0 - Build 32.0.101.8801
+
+	wxWidgets: 3.3.2 (wchar_t,STL containers)
+	Boost: 1.90.0
+	OCC: 7.9.2
+	Curl: 8.18.0
+	ngspice: 46
+	Compiler: Visual C++ 1944 without C++ ABI
+	KICAD_IPC_API=ON
+	KICAD_USE_PCH=OFF
+
+Locale: 
+	Lang: de_DE
+	Enc: UTF-8
+	Num: 1.234,5
+	Encoded кΩ丈: D0BACEA9E4B888 (sys), D0BACEA9E4B888 (utf8)
+```
 
 ---
 
 ### Issue 5 -- AC tilde notation doubled: 3~ becomes 3~~ in motor symbol
 
-**Module:** `eeschema/importers/schematic_eagle_plugin.cpp`
+**Module:** `eeschema/importers/schematic_eagle_plugin.cpp`  
 **Labels:** `Eagle import`, `bug`, `eeschema`
 
-The Eagle literal `~` in the motor symbol (`M 3~`) is not escaped, even though
-`~` is used as an overbar special character in KiCad. Result: `3~~` instead of `3~`.
+## Description
+
+The three-phase AC notation string `3~` in EAGLE motor symbols (`M 3~`) is rendered as `3~~` after importing into KiCad.
+
+Because the tilde (`~`) character is used as an overbar formatting prefix in KiCad text rendering, the unescaped EAGLE literal tilde `~` is duplicated or improperly escaped during conversion, resulting in `3~~`.
+
+**Expected behavior:** The text literal `3~` should be properly escaped during import so that it renders as `3~`.
+
+## Steps to reproduce
+
+1. Open KiCad Schematic Editor.
+2. Import an EAGLE schematic containing a 3-phase motor symbol (`M 3~`).
+3. Inspect the motor symbol label.
+4. Notice the text renders as `3~~` instead of `3~`.
+
+## KiCad Version
+
+```
+Application: KiCad x64 on x64
+
+Version: 10.0.5, release build
+
+Libraries:
+	wxWidgets 3.3.2 
+	FreeType 2.13.3
+	HarfBuzz 12.3.0
+	FontConfig 2.17.1
+
+Platform: Windows 11 (Erzeugungsversion 26200), 64-bit Edition, 64 bit, Little endian, wxMSW
+OpenGL: Intel, Intel(R) Graphics, 4.6.0 - Build 32.0.101.8801
+
+	wxWidgets: 3.3.2 (wchar_t,STL containers)
+	Boost: 1.90.0
+	OCC: 7.9.2
+	Curl: 8.18.0
+	ngspice: 46
+	Compiler: Visual C++ 1944 without C++ ABI
+	KICAD_IPC_API=ON
+	KICAD_USE_PCH=OFF
+
+Locale: 
+	Lang: de_DE
+	Enc: UTF-8
+	Num: 1.234,5
+	Encoded кΩ丈: D0BACEA9E4B888 (sys), D0BACEA9E4B888 (utf8)
+```
 
 ---
 
 ### Issue 6 -- Multi-page net cross-references (L1/1.18A, N/2.1F...) not imported and not supported
 
-**Module:** `eeschema/importers/schematic_eagle_plugin.cpp` + `eeschema` (Feature Request)
+**Module:** `eeschema/importers/schematic_eagle_plugin.cpp` + `eeschema` (Feature Request)  
 **Labels:** `Eagle import`, `enhancement`, `eeschema`, `multi-sheet`
 
-Eagle automatically generates annotations of the form `NETNAME/SHEET.COLUMNROW`
-at every wire end for each net that crosses sheets.
-These are **normatively required** per **DIN EN 61082 / IEC 61082**.
+## Description
 
-**Specific missing cross-references** (from sample2/, 2-sheet star-delta schematic):
-```
-L1/1.18A  L2/1.18A  L3/1.18A   (sheet 1 references sheet 2)
-L1/2.2A   L2/2.2A   L3/2.2A    (sheet 2 references sheet 1)
-N/1.18F   PE/1.18F              (N/PE sheet 1 -> sheet 2)
-N/2.1F    PE/2.1F               (N/PE sheet 2 -> sheet 1)
-```
+For multi-page schematics, EAGLE automatically places inter-sheet net cross-references at wire ends in the format `NETNAME/SHEET.COLUMNROW` (e.g. `L1/1.18A`, `L1/2.2A`, `N/1.18F`, `PE/2.1F`). These cross-references are normatively required by DIN EN 61082 / IEC 61082 for industrial electrical schematics.
 
-As a short-term import workaround these should be preserved as **text annotations**
-at the wire end. Long-term, a **new KiCad feature** for automatic inter-sheet net
-cross-references with coordinate display is needed.
+Upon importing into KiCad, these inter-sheet net cross-references are completely lost.
+
+**Expected behavior:**
+1. Short term: Import EAGLE net cross-reference labels as text annotations at wire ends.
+2. Long term: KiCad feature request for automatic inter-sheet net cross-references displaying sheet number and grid coordinates.
+
+## Steps to reproduce
+
+1. Open KiCad Schematic Editor.
+2. Import a multi-page EAGLE schematic (`.sch`) containing cross-page nets (e.g. L1, L2, L3, N, PE).
+3. Inspect the wire ends crossing between sheet 1 and sheet 2.
+4. Notice that cross-reference labels (e.g. `L1/1.18A`) are missing entirely.
+
+## KiCad Version
+
+```
+Application: KiCad x64 on x64
+
+Version: 10.0.5, release build
+
+Libraries:
+	wxWidgets 3.3.2 
+	FreeType 2.13.3
+	HarfBuzz 12.3.0
+	FontConfig 2.17.1
+
+Platform: Windows 11 (Erzeugungsversion 26200), 64-bit Edition, 64 bit, Little endian, wxMSW
+OpenGL: Intel, Intel(R) Graphics, 4.6.0 - Build 32.0.101.8801
+
+	wxWidgets: 3.3.2 (wchar_t,STL containers)
+	Boost: 1.90.0
+	OCC: 7.9.2
+	Curl: 8.18.0
+	ngspice: 46
+	Compiler: Visual C++ 1944 without C++ ABI
+	KICAD_IPC_API=ON
+	KICAD_USE_PCH=OFF
+
+Locale: 
+	Lang: de_DE
+	Enc: UTF-8
+	Num: 1.234,5
+	Encoded кΩ丈: D0BACEA9E4B888 (sys), D0BACEA9E4B888 (utf8)
+```
 
 ---
 
 ### Issue 7 -- kicad-cli sch export pdf does not expand ${INTERSHEET_REFS} variable
 
-**Module:** `kicad-cli` / `eeschema/sch_io/kicad_sexpr/`
+**Module:** `kicad-cli` / `eeschema/sch_io/kicad_sexpr/`  
 **Labels:** `kicad-cli`, `bug`, `eeschema`, `regression`
 
-**Description:**
+## Description
 
-KiCad stores inter-sheet cross-references as property `${INTERSHEET_REFS}`
-in the `.kicad_sch`. In the GUI these are correctly resolved, provided
-`intersheets_ref_show: true` is set in the project and `(hide no)` is set
-in the corresponding property blocks of the `.kicad_sch`.
+KiCad stores inter-sheet cross-references as property `${INTERSHEET_REFS}` in `.kicad_sch` files. In the KiCad GUI, these variables are correctly expanded and printed when `intersheets_ref_show: true` is set in the project file.
 
-The CLI exporter does **not** expand `${INTERSHEET_REFS}` -- the fields
-remain empty in the exported PDF.
+However, the CLI exporter (`kicad-cli sch export pdf`) does **not** expand `${INTERSHEET_REFS}` -- the fields remain blank in the exported PDF output.
 
-**Reproduction:**
+**Expected behavior:** `kicad-cli sch export pdf` should expand `${INTERSHEET_REFS}` variables identically to GUI PDF export.
 
-```bash
-# Prerequisites:
-# - .kicad_pro:  "intersheets_ref_show": true
-# - .kicad_sch:  (property "Intersheetrefs" "" ... (hide no) ...)
+## Steps to reproduce
 
-kicad-cli sch export pdf --output out.pdf project.kicad_sch
+1. Prepare a multi-sheet project with `intersheets_ref_show: true` in `.kicad_pro` and `(hide no)` on `Intersheetrefs` properties in `.kicad_sch`.
+2. Run command line export:
+   `kicad-cli sch export pdf --output out.pdf project.kicad_sch`
+3. Open `out.pdf` and check inter-sheet reference fields.
+4. Notice that `${INTERSHEET_REFS}` fields are empty in the CLI-exported PDF, whereas GUI export displays them correctly.
 
-# Result: ${INTERSHEET_REFS} fields are empty in the PDF
-# Expected: cross-references are resolved and printed as in the GUI
+## KiCad Version
+
 ```
+Application: KiCad x64 on x64
 
-**Affected workflows:** All CI/CD pipelines, Makefile-based documentation
-generation, automated PDF exports.
+Version: 10.0.5, release build
 
-**Workaround:** Export PDF via the KiCad GUI (File -> Plot -> PDF).
-The GUI resolves `${INTERSHEET_REFS}` correctly.
+Libraries:
+	wxWidgets 3.3.2 
+	FreeType 2.13.3
+	HarfBuzz 12.3.0
+	FontConfig 2.17.1
+
+Platform: Windows 11 (Erzeugungsversion 26200), 64-bit Edition, 64 bit, Little endian, wxMSW
+OpenGL: Intel, Intel(R) Graphics, 4.6.0 - Build 32.0.101.8801
+
+	wxWidgets: 3.3.2 (wchar_t,STL containers)
+	Boost: 1.90.0
+	OCC: 7.9.2
+	Curl: 8.18.0
+	ngspice: 46
+	Compiler: Visual C++ 1944 without C++ ABI
+	KICAD_IPC_API=ON
+	KICAD_USE_PCH=OFF
+
+Locale: 
+	Lang: de_DE
+	Enc: UTF-8
+	Num: 1.234,5
+	Encoded кΩ丈: D0BACEA9E4B888 (sys), D0BACEA9E4B888 (utf8)
+```
 
 ---
 
 ### Issue 8 -- Duplicate drawing frame after Eagle import (symbol + KiCad page border)
 
-**Module:** `eeschema/importers/schematic_eagle_plugin.cpp`
+**Module:** `eeschema/importers/schematic_eagle_plugin.cpp`  
 **Labels:** `Eagle import`, `bug`, `eeschema`
 
-**Description:**
+## Description
 
-The Eagle importer simultaneously:
+When importing an EAGLE schematic containing a drawing frame symbol (e.g. `RAHMEN_A4_8Z-19S`), the EAGLE importer performs two conflicting actions simultaneously:
+1. Sets page dimensions `(paper "User" 322.88 244.27)` triggering KiCad's internal page border rendering.
+2. Places the EAGLE drawing frame symbol as a normal schematic component.
 
-1. Sets the paper format (`paper "User" ...`) to the dimensions of the Eagle drawing sheet
-2. Places the Eagle drawing frame symbol (e.g. `RAHMEN_A4_8Z-19S`) as a normal
-   schematic component
+As a result, KiCad renders **two overlapping frames** (KiCad's built-in page border + the imported EAGLE frame symbol).
 
-As a result KiCad renders **two overlapping frames** in the PDF export:
-- The KiCad internal page border (from the `paper` format)
-- The imported Eagle frame (as a symbol)
+**Expected behavior:** The importer should either suppress KiCad's default page border (reference an empty `.kicad_wks`) or populate KiCad's title block without importing the frame symbol as a graphic component.
 
-**Reproduction:**
+## Steps to reproduce
+
+1. Import an EAGLE schematic containing a drawing frame symbol into KiCad.
+2. Export PDF via GUI or `kicad-cli sch export pdf`.
+3. Open exported PDF or view schematic editor canvas.
+4. Notice duplicate overlapping drawing frames.
+
+## KiCad Version
 
 ```
-1. Import an Eagle .sch with a drawing frame symbol
-2. kicad-cli sch export pdf project.kicad_sch
-3. Result: duplicate frame visible in PDF
-```
+Application: KiCad x64 on x64
 
-**Expected behaviour:** The importer should either:
-- Option A: Set the `paper` format without the KiCad default border
-  (reference an empty `.kicad_wks`), or
-- Option B: Not import the drawing frame symbol and instead populate
-  the KiCad title block
+Version: 10.0.5, release build
 
-**Workaround (verified):** Create an empty `.kicad_wks` file and reference
-it in the project under `"schematic"` -> `"page_layout_descr_file"`.
-This suppresses the KiCad default border **both in the GUI and in the
-kicad-cli PDF export**.
+Libraries:
+	wxWidgets 3.3.2 
+	FreeType 2.13.3
+	HarfBuzz 12.3.0
+	FontConfig 2.17.1
 
-**Alternative workaround (CLI only):** `--exclude-drawing-sheet` flag:
+Platform: Windows 11 (Erzeugungsversion 26200), 64-bit Edition, 64 bit, Little endian, wxMSW
+OpenGL: Intel, Intel(R) Graphics, 4.6.0 - Build 32.0.101.8801
 
-```bash
-kicad-cli sch export pdf --exclude-drawing-sheet --output out.pdf project.kicad_sch
+	wxWidgets: 3.3.2 (wchar_t,STL containers)
+	Boost: 1.90.0
+	OCC: 7.9.2
+	Curl: 8.18.0
+	ngspice: 46
+	Compiler: Visual C++ 1944 without C++ ABI
+	KICAD_IPC_API=ON
+	KICAD_USE_PCH=OFF
+
+Locale: 
+	Lang: de_DE
+	Enc: UTF-8
+	Num: 1.234,5
+	Encoded кΩ丈: D0BACEA9E4B888 (sys), D0BACEA9E4B888 (utf8)
 ```
 
 ---
 
 ### Issue 9 -- Inter-sheet net references show all pages instead of only connected pages
 
-**Module:** `eeschema` / net navigation
+**Module:** `eeschema` / net navigation  
 **Labels:** `eeschema`, `enhancement`, `multi-sheet`
 
-**Description:**
+## Description
 
-KiCad's `${INTERSHEET_REFS}` shows **all other sheets** on which a label with
-the same net name exists, regardless of whether the net actually enters or
-exits (wire end) that sheet or merely has another label there.
+KiCad's `${INTERSHEET_REFS}` variable lists **every other sheet** in the project where a label with the same net name exists, regardless of wire topology or whether the net actually enters or exits that sheet.
 
-**Reproduction:**
+In a 6-page project where a common net (such as PE or N) is present on all sheets, page 1 displays `2 3 4 5 6`, page 2 displays `1 3 4 5 6`, etc. This creates information clutter rather than clear navigational references.
 
-Multi-page schematic with a net (e.g. PE, N, L1) that has labels on all sheets:
+**Expected behavior (EAGLE model):** Net cross-references should perform topological filtering, showing only sheets with direct wire connections along with grid coordinates (`NETNAME/SHEET.COLUMNROW`).
 
-- Sheet 1 shows: `2 3 4 5 6`
-- Sheet 2 shows: `1 3 4 5 6`
-- etc.
+## Steps to reproduce
 
-**Expected behaviour (Eagle model):**
+1. Create or import a multi-sheet project (e.g. 6 sheets) with common net labels (e.g. PE, N) present on every sheet.
+2. Enable `intersheets_ref_show: true` and make `${INTERSHEET_REFS}` visible on net labels.
+3. Inspect net labels on sheet 1.
+4. Notice that page references list every sheet (`2 3 4 5 6`) indiscriminately.
 
-Cross-references show only sheets with a **direct wire connection**,
-fully formatted as `NETNAME/SHEET.COLUMNROW` (e.g. `L1/3.4B`).
+## KiCad Version
 
-**Impact:** On large schematics (6+ sheets) the current behaviour creates
-information overload instead of useful navigation and violates the requirements
-of **DIN EN 61082 / IEC 61082** for standards-compliant circuit diagrams.
+```
+Application: KiCad x64 on x64
 
-**Proposed fix:**
-- Topological evaluation: only show sheets where the net physically
-  enters or exits (wire end at sheet boundary)
-- Optionally: display column/row coordinate in addition to the sheet number
+Version: 10.0.5, release build
+
+Libraries:
+	wxWidgets 3.3.2 
+	FreeType 2.13.3
+	HarfBuzz 12.3.0
+	FontConfig 2.17.1
+
+Platform: Windows 11 (Erzeugungsversion 26200), 64-bit Edition, 64 bit, Little endian, wxMSW
+OpenGL: Intel, Intel(R) Graphics, 4.6.0 - Build 32.0.101.8801
+
+	wxWidgets: 3.3.2 (wchar_t,STL containers)
+	Boost: 1.90.0
+	OCC: 7.9.2
+	Curl: 8.18.0
+	ngspice: 46
+	Compiler: Visual C++ 1944 without C++ ABI
+	KICAD_IPC_API=ON
+	KICAD_USE_PCH=OFF
+
+Locale: 
+	Lang: de_DE
+	Enc: UTF-8
+	Num: 1.234,5
+	Encoded кΩ丈: D0BACEA9E4B888 (sys), D0BACEA9E4B888 (utf8)
+```
 
 ---
 
@@ -556,30 +854,52 @@ of **DIN EN 61082 / IEC 61082** for standards-compliant circuit diagrams.
 **Module:** `kicad-cli` / `eeschema`  
 **Labels:** `kicad-cli`, `enhancement`, `eeschema`, `multi-sheet`
 
-**Description:**
+## Description
 
-When running `kicad-cli sch export pdf --output out.pdf project_page1.kicad_sch`,
-only the specified schematic file is exported. If a project consists of multiple
-independent ("flat") top-level sheets -- as is standard when imported from Eagle --
-all other sheets in the project are silently ignored.
+Running `kicad-cli sch export pdf --output out.pdf project_page1.kicad_sch` exports only the specified schematic file. If a project consists of multiple independent ("flat") top-level sheets (the standard structure produced by the EAGLE importer), all other project sheets are ignored.
 
-**Reproduction:**
+In contrast, the KiCad GUI Page Navigator recognizes all project sheets and plots them into a single multi-page PDF natively.
 
-1. Import a multi-page Eagle project (e.g. 2 sheets: `page1.kicad_sch` and `page2.kicad_sch`)
-2. Run `kicad-cli sch export pdf --output out.pdf page1.kicad_sch`
-3. Result: `out.pdf` contains only page 1.
+**Expected behavior:** `kicad-cli` should recognize all top-level sheets in a project (via `.kicad_pro`) and export them into a single multi-page PDF.
 
-**Expected behaviour:**
+## Steps to reproduce
 
-`kicad-cli` should -- similar to the Page Navigator in the KiCad GUI -- recognize all
-schematics belonging to the project and plot them into a single multi-page PDF.
+1. Import a multi-page EAGLE project (producing `page1.kicad_sch`, `page2.kicad_sch` under `project.kicad_pro`).
+2. Run `kicad-cli sch export pdf --output out.pdf page1.kicad_sch`.
+3. Open `out.pdf`.
+4. Notice that `out.pdf` contains only page 1 instead of all project sheets.
 
-**Workaround & Drawbacks:**
+## KiCad Version
 
-Currently, each sheet must be exported individually via `kicad-cli` and merged using
-external tools (e.g. Ghostscript / `pdfunite`). This leads to:
-- Potential quality degradation due to font/vector re-embedding
-- Unexpanded `${INTERSHEET_REFS}` variables
+```
+Application: KiCad x64 on x64
+
+Version: 10.0.5, release build
+
+Libraries:
+	wxWidgets 3.3.2 
+	FreeType 2.13.3
+	HarfBuzz 12.3.0
+	FontConfig 2.17.1
+
+Platform: Windows 11 (Erzeugungsversion 26200), 64-bit Edition, 64 bit, Little endian, wxMSW
+OpenGL: Intel, Intel(R) Graphics, 4.6.0 - Build 32.0.101.8801
+
+	wxWidgets: 3.3.2 (wchar_t,STL containers)
+	Boost: 1.90.0
+	OCC: 7.9.2
+	Curl: 8.18.0
+	ngspice: 46
+	Compiler: Visual C++ 1944 without C++ ABI
+	KICAD_IPC_API=ON
+	KICAD_USE_PCH=OFF
+
+Locale: 
+	Lang: de_DE
+	Enc: UTF-8
+	Num: 1.234,5
+	Encoded кΩ丈: D0BACEA9E4B888 (sys), D0BACEA9E4B888 (utf8)
+```
 
 ---
 
@@ -599,5 +919,6 @@ and barely usable in practice.
 
 ---
 
-*Analysis created with: Python 3.14, pdfminer.six 20260107*
+*Analysis created with: Python 3.14, pdfminer.six 20260107*  
 *Repository: [Meisterschulen-am-Ostbahnhof-Munchen/KiCAD_elektro](https://github.com/Meisterschulen-am-Ostbahnhof-Munchen/KiCAD_elektro)*
+
