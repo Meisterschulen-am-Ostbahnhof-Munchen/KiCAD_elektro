@@ -294,6 +294,45 @@ across all sheets -- no topological routing, no distinction between
 
 ---
 
+### Problem 12 -- kicad-cli only exports from the given file, ignoring flat top-level sheets
+
+**Severity:** HIGH | **Status: VERIFIED**
+
+`kicad-cli sch export pdf` exports **only the sheet hierarchy rooted at the
+given file**. For projects with multiple independent ("flat") top-level sheets
+-- as produced by the Eagle importer -- only the one passed file is exported;
+all other sheets are **silently ignored**.
+
+**Impact for multi-page Eagle imports:**
+
+Since Eagle stores all sheets as equal top-level sheets (no hierarchy root
+as in native KiCad projects), each sheet must be exported individually
+and then merged:
+
+```bash
+# Required workaround: each sheet separately, then merge with Ghostscript
+kicad-cli sch export pdf --output page1.pdf page1.kicad_sch
+kicad-cli sch export pdf --output page2.pdf page2.kicad_sch
+gs -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=combined.pdf page1.pdf page2.pdf
+```
+
+**Quality issue:** The Ghostscript merge step (re-embedding fonts/vectors)
+can introduce **visible quality differences** compared to a native GUI export.
+
+**GUI advantage:** The KiCad GUI knows all project sheets via the Page Navigator
+and can plot them in a **single native pass** without any intermediate step --
+hence the cleaner result.
+
+**Comparison:**
+
+| Method | All sheets | Quality | INTERSHEET_REFS |
+|--------|------------|---------|----------------|
+| kicad-cli (direct) | No (given file only) | Native | Empty |
+| kicad-cli + Ghostscript | Yes (workaround) | Possible quality loss | Empty |
+| KiCad GUI Plot | Yes | Native, best quality | Correctly resolved |
+
+---
+
 ## Summary
 
 | # | Problem | Severity | KiCad equivalent available? |
@@ -309,6 +348,7 @@ across all sheets -- no topological routing, no distinction between
 | 9 | kicad-cli does not expand ${INTERSHEET_REFS} | HIGH | No (CLI bug) |
 | 10 | Duplicate drawing frame after import | HIGH | Yes, workaround: empty.kicad_wks |
 | 11 | Inter-sheet refs without hierarchy (all-to-all) | HIGH | No (fundamental KiCad design issue) |
+| 12 | kicad-cli ignores flat top-level sheets, Ghostscript workaround needed | HIGH | No (CLI architecture bug) |
 
 ---
 

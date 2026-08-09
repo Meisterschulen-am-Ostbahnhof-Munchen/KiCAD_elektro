@@ -245,6 +245,46 @@ alle Blaetter -- kein topologisches Routing, keine Unterscheidung zwischen
 
 ---
 
+### Problem 12 -- kicad-cli folgt nur der uebergebenen Datei, nicht allen "flat" Top-Level-Sheets
+
+**Schweregrad:** HOCH | **Status: VERIFIZIERT**
+
+`kicad-cli sch export pdf` exportiert **nur die Seitenhierarchie ab der
+uebergebenen Datei**. Bei Projekten mit mehreren unabhaengigen ("flat")
+Top-Level-Sheets -- wie sie beim Eagle-Import entstehen -- wird nur die
+eine uebergebene Seite exportiert, die anderen Seiten werden **ignoriert**.
+
+**Auswirkung fuer mehrseitige Eagle-Importe:**
+
+Da Eagle alle Blaetter als gleichwertige Top-Level-Sheets speichert (kein
+Hierarchie-Root wie bei nativen KiCad-Projekten), muss jede Seite einzeln
+exportiert und anschliessend zusammengefuehrt werden:
+
+```bash
+# Notwendiger Workaround: Jede Seite einzeln, dann merge mit Ghostscript
+kicad-cli sch export pdf --output seite1.pdf seite1.kicad_sch
+kicad-cli sch export pdf --output seite2.pdf seite2.kicad_sch
+gs -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=gesamt.pdf seite1.pdf seite2.pdf
+```
+
+**Qualitaetsproblem:** Der Ghostscript-Merge-Schritt (Fonts/Vektoren neu
+einbetten) kann **sichtbare Qualitaetsunterschiede** im Vergleich zum
+nativen GUI-Export erzeugen.
+
+**GUI-Vorteil:** Die KiCad-GUI kennt ueber den Page Navigator alle Seiten
+des Projekts und kann sie in einem **einzigen nativen Plot-Durchgang**
+ohne Zwischenschritt ausgeben -- daher das sauberere Ergebnis.
+
+**Vergleich:**
+
+| Methode | Alle Seiten | Qualitaet | INTERSHEET_REFS |
+|---------|-------------|-----------|----------------|
+| kicad-cli (direkt) | Nein (nur uebergebene Datei) | Nativ | Leer |
+| kicad-cli + Ghostscript | Ja (Workaround) | Qualitaetsverlust moeglich | Leer |
+| KiCad GUI Plotten | Ja | Nativ, beste Qualitaet | Korrekt aufgeloest |
+
+---
+
 ## Zusammenfassung
 
 | # | Problem | Schweregrad | KiCad-Aequivalent vorhanden? |
@@ -260,6 +300,7 @@ alle Blaetter -- kein topologisches Routing, keine Unterscheidung zwischen
 | 9 | kicad-cli expandiert ${INTERSHEET_REFS} nicht | HOCH | Nein (CLI-Bug) |
 | 10 | Doppelter Zeichnungsrahmen nach Import | HOCH | Ja, Workaround: empty.kicad_wks |
 | 11 | Seitenreferenzen ohne Hierarchie (alle auf alle) | HOCH | Nein (grundlegendes KiCad-Designproblem) |
+| 12 | kicad-cli ignoriert flat Top-Level-Sheets, Ghostscript-Workaround noetig | HOCH | Nein (CLI-Architektur-Bug) |
 
 ---
 
