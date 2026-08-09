@@ -51,6 +51,22 @@ Each library has its own folder with a `README.md` listing all symbols as render
 
 The original EAGLE libraries also load in Fusion 360's EAGLE integration, but the special "elektro" schematic features (e.g. cross-references between a contactor coil and its contacts, documented in `elektro-tutorial.pdf` under `EAGLE-7.7.0/doc`) are missing there — reportedly removed to push users toward AutoCAD Electrical. For the full feature set, use **EAGLE 7.7.0**, the last standalone version before the Autodesk acquisition, which also runs under the **EAGLE Express** license tier. The original license terms from that time continue to apply.
 
+## Eagle → KiCad Import Analysis
+
+During the conversion of Eagle schematics to KiCad format, a number of issues
+were identified and documented. The analysis is based on a star-delta motor
+starter schematic converted from Eagle 7.7.0 to KiCad 10.0.5.
+
+| Language | Document |
+|----------|----------|
+| 🇩🇪 Deutsch | [EAGLE-to-KiCad-Import-Issues_DE.md](sample/EAGLE-to-KiCad-Import-Issues_DE.md) |
+| 🇬🇧 English | [EAGLE-to-KiCad-Import-Issues_EN.md](sample/EAGLE-to-KiCad-Import-Issues_EN.md) |
+
+**10 issues** documented, including 8 planned KiCad GitLab issues covering:
+missing reference designators, lost cross-references, title block variable
+mapping, pin encoding bugs, tilde escaping, net label concatenation,
+missing inter-sheet cross-references, and duplicate drawing frames.
+
 ## License
 
 The original EAGLE library terms are reproduced verbatim in [`DESCRIPTION`](DESCRIPTION). See that file for the original author's licensing/disclaimer notice.
