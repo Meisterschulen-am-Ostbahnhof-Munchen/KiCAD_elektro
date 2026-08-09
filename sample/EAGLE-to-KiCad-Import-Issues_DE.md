@@ -62,17 +62,17 @@ auf Blatt A, Hilfskontakte auf Blatt B) automatisch **Querverweise** im Format /
 
 Im Testplan fehlen nach der Konvertierung:
 
-`
+```
 /1.13B   /1.13D   /1.13E
 /1.14E   /1.16D   /1.16E
 /1.17D   /1.17E   /1.4D
 /1.4E    /1.7D    /1.9D
-`
+```
 
 Eagle speichert das Querverweisformat in der Schematicwurzel:
-`xml
+```xml
 <schematic xreflabel="%F%N/%S.%C%R" xrefpart="/%S.%C%R">
-`
+```
 
 KiCad hat kein direktes Aequivalent fuer dieses automatische Querverweissystem.
 Die Informationen werden beim Import schlicht ignoriert.
@@ -163,13 +163,13 @@ Format: NETZNAME/BLATT.SPALTEREIHE -- z. B.:
 **Nachweis aus dem mehrseitigen Testplan** (sample2/, 2 Blaetter):
 
 Im Eagle-Original vorhanden, in KiCad komplett fehlend:
-`
+```
 L1/1.18A   L1/2.2A
 L2/1.18A   L2/2.2A
 L3/1.18A   L3/2.2A
 N/1.18F    N/2.1F
 PE/1.18F   PE/2.1F
-`
+```
 
 Diese Angaben sind in industriellen Stromlaufplaenen nach **DIN EN 61082 / IEC 61082**
 normativ gefordert. Ohne sie ist ein mehrseitiger Plan fuer den Elektrotechniker
@@ -375,12 +375,12 @@ Kommentare der Form NETZNAME/BLATT.SPALTEREIHE direkt am Drahtende.
 Diese sind nach **DIN EN 61082 / IEC 61082** fuer Stromlaufplaene normativ gefordert.
 
 **Konkret fehlende Querverweise** (aus sample2/, 2-blaettriger Stern-Dreieck-Plan):
-`
+```
 L1/1.18A  L2/1.18A  L3/1.18A   (Blatt 1 verweist auf Blatt 2)
 L1/2.2A   L2/2.2A   L3/2.2A    (Blatt 2 verweist auf Blatt 1)
 N/1.18F   PE/1.18F              (N/PE Blatt 1 -> Blatt 2)
 N/2.1F    PE/2.1F               (N/PE Blatt 2 -> Blatt 1)
-`
+```
 
 Als kurzfristiger Import-Workaround sollten diese als **Text-Annotationen** am
 Drahtende erhalten bleiben. Langfristig ist eine **neue KiCad-Funktion** fuer
@@ -388,40 +388,39 @@ automatische seitenuebergreifende Netz-Querverweise mit Koordinatenangabe noetig
 
 ---
 
-### Issue 7 -- kicad-cli sch export pdf does not expand  variable
+### Issue 7 -- kicad-cli sch export pdf does not expand ${INTERSHEET_REFS} variable
 
-**Modul:** kicad-cli / eeschema/sch_io/kicad_sexpr/
-**Labels:** kicad-cli, ug, eeschema, 
-egression
+**Modul:** `kicad-cli` / `eeschema/sch_io/kicad_sexpr/`  
+**Labels:** `kicad-cli`, `bug`, `eeschema`, `regression`
 
 **Beschreibung:**
 
-KiCad speichert seitenuebergreifende Querverweise als Property ${INTERSHEET_REFS}
-in der .kicad_sch. In der GUI werden diese korrekt aufgeloest, sofern im Projekt
-intersheets_ref_show: true gesetzt und (hide no) in den entsprechenden
-Property-Bloecken der .kicad_sch gesetzt ist.
+KiCad speichert seitenuebergreifende Querverweise als Property `${INTERSHEET_REFS}`
+in der `.kicad_sch`. In der GUI werden diese korrekt aufgeloest, sofern im Projekt
+`intersheets_ref_show: true` gesetzt und `(hide no)` in den entsprechenden
+Property-Bloecken der `.kicad_sch` gesetzt ist.
 
-Der CLI-Exporter expandiert ${INTERSHEET_REFS} **nicht** -- die Felder bleiben
+Der CLI-Exporter expandiert `${INTERSHEET_REFS}` **nicht** -- die Felder bleiben
 im exportierten PDF leer.
 
 **Reproduktion:**
 
-`ash
+```bash
 # Voraussetzungen:
 # - .kicad_pro:  "intersheets_ref_show": true
 # - .kicad_sch:  (property "Intersheetrefs" "" ... (hide no) ...)
 
 kicad-cli sch export pdf --output out.pdf projekt.kicad_sch
 
-# Ergebnis: -Felder sind leer im PDF
+# Ergebnis: ${INTERSHEET_REFS}-Felder sind leer im PDF
 # Erwartet: Querverweise werden wie in der GUI aufgeloest und gedruckt
-`
+```
 
 **Betroffene Workflows:** Alle CI/CD-Pipelines, Makefile-basierte
 Dokumentationsgenerierung, automatisierte PDF-Exports.
 
-**Workaround:** Derzeit keiner bekannt fuer reine CLI-Nutzung. GUI-Export
-via KiCad-Oberflaeche funktioniert korrekt.
+**Workaround:** PDF ueber die KiCad GUI exportieren (Datei -> Schaltplan plotten -> PDF).
+Die GUI loest `${INTERSHEET_REFS}` korrekt auf.
 
 ---
 
