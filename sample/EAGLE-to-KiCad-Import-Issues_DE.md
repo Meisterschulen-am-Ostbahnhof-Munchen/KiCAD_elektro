@@ -520,6 +520,38 @@ der **DIN EN 61082 / IEC 61082** fuer normgerechte Stromlaufplaene.
 
 ---
 
+### Issue 10 -- kicad-cli sch export pdf ignoriert flat Top-Level-Sheets in mehrseitigen Projekten
+
+**Modul:** `kicad-cli` / `eeschema`  
+**Labels:** `kicad-cli`, `enhancement`, `eeschema`, `multi-sheet`
+
+**Beschreibung:**
+
+Beim Aufruf von `kicad-cli sch export pdf --output out.pdf projekt_seite1.kicad_sch`
+wird ausschliesslich die uebergebene Schaltplandatei exportiert. Wenn ein Projekt
+aus mehreren unabhaengigen ("flat") Top-Level-Sheets besteht -- wie beim Import aus
+Eagle ueblich -- werden alle weiteren Dateien des Projekts ignoriert.
+
+**Reproduktion:**
+
+1. Mehrseitiges Eagle-Projekt importieren (z. B. 2 Seiten: `seite1.kicad_sch` und `seite2.kicad_sch`)
+2. `kicad-cli sch export pdf --output out.pdf seite1.kicad_sch`
+3. Ergebnis: `out.pdf` enthaelt nur Seite 1.
+
+**Erwartetes Verhalten:**
+
+`kicad-cli` sollte -- analog zum Page Navigator in der KiCad GUI -- alle zum Projekt
+gehoerenden Schaltplaene erkennen und in ein einziges mehrseitiges PDF exportieren.
+
+**Workaround & Nachteile:**
+
+Derzeit muss jede Seite einzeln via `kicad-cli` exportiert und mit externen Tools
+(z. B. Ghostscript / `pdfunite`) zusammengefuegt werden. Dies fuehrt zu:
+- Potentiellen Qualitaetsverlusten durch erneutes Re-Embedding von Schriften/Vektoren
+- Leeren/unvollstaendigen `${INTERSHEET_REFS}`-Variablen
+
+---
+
 ## Hinweis: Querverweise als Grundfunktion in der Elektrotechnik
 
 Eagles Querverweissystem (%F%N/%S.%C%R) ist fuer industrielle Stromlaufplaene

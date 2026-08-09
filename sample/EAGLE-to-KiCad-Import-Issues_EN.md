@@ -551,6 +551,38 @@ of **DIN EN 61082 / IEC 61082** for standards-compliant circuit diagrams.
 
 ---
 
+### Issue 10 -- kicad-cli sch export pdf ignores flat top-level sheets in project
+
+**Module:** `kicad-cli` / `eeschema`  
+**Labels:** `kicad-cli`, `enhancement`, `eeschema`, `multi-sheet`
+
+**Description:**
+
+When running `kicad-cli sch export pdf --output out.pdf project_page1.kicad_sch`,
+only the specified schematic file is exported. If a project consists of multiple
+independent ("flat") top-level sheets -- as is standard when imported from Eagle --
+all other sheets in the project are silently ignored.
+
+**Reproduction:**
+
+1. Import a multi-page Eagle project (e.g. 2 sheets: `page1.kicad_sch` and `page2.kicad_sch`)
+2. Run `kicad-cli sch export pdf --output out.pdf page1.kicad_sch`
+3. Result: `out.pdf` contains only page 1.
+
+**Expected behaviour:**
+
+`kicad-cli` should -- similar to the Page Navigator in the KiCad GUI -- recognize all
+schematics belonging to the project and plot them into a single multi-page PDF.
+
+**Workaround & Drawbacks:**
+
+Currently, each sheet must be exported individually via `kicad-cli` and merged using
+external tools (e.g. Ghostscript / `pdfunite`). This leads to:
+- Potential quality degradation due to font/vector re-embedding
+- Unexpanded `${INTERSHEET_REFS}` variables
+
+---
+
 ## Note: Cross-References as a Core Function in Electrical Engineering
 
 Eagle's cross-reference system (`%F%N/%S.%C%R`) is fundamental for industrial
