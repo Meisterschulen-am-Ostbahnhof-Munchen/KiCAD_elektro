@@ -359,7 +359,7 @@ hence the cleaner result.
 **Module:** `eeschema/importers/schematic_eagle_plugin.cpp`  
 **Labels:** `Eagle import`, `bug`, `eeschema`
 
-## Description
+# Description
 
 When importing an EAGLE schematic (`.sch`) into KiCad, component reference designators (F1, F2, F3, F4, Q1-Q4, K1, S1, S2, M1, X1-X3) are completely missing from the imported schematic symbols.
 
@@ -367,14 +367,14 @@ In EAGLE, these reference designators reside on Layer 95 (Names) and are clearly
 
 **Expected behavior:** EAGLE component names (Layer 95) should be imported into the KiCad `Reference` field for each symbol.
 
-## Steps to reproduce
+# Steps to reproduce
 
 1. Open KiCad Schematic Editor.
 2. Import an EAGLE schematic containing named components (`File` -> `Import` -> `Non-KiCad Schematic...` -> select EAGLE `.sch`).
 3. Inspect the imported symbols in the schematic editor.
 4. Notice that component reference designators (F1, Q2, K1, etc.) are missing or empty.
 
-## KiCad Version
+# KiCad Version
 
 ```
 Application: KiCad x64 on x64
@@ -413,7 +413,7 @@ Locale:
 **Module:** `eeschema/importers/schematic_eagle_plugin.cpp`  
 **Labels:** `Eagle import`, `enhancement`, `eeschema`
 
-## Description
+# Description
 
 EAGLE automatically generates cross-references in the format `/%S.%C%R` (sheet.column+row) for multi-page schematics and split symbols (e.g. contactor coil on sheet 1, auxiliary contacts on sheet 2). EAGLE stores this cross-reference format in the schematic root: `<schematic xreflabel="%F%N/%S.%C%R" xrefpart="/%S.%C%R">`.
 
@@ -421,14 +421,14 @@ During EAGLE schematic import into KiCad, these cross-reference strings (such as
 
 **Expected behavior:** EAGLE cross-references should at minimum be imported as text annotations near the respective symbol pins so that historical schematic references are preserved.
 
-## Steps to reproduce
+# Steps to reproduce
 
 1. Open KiCad Schematic Editor.
 2. Import an EAGLE schematic (`.sch`) containing split symbols (e.g. contactor coils & contacts) with EAGLE cross-references.
 3. Inspect the imported symbols.
 4. Notice that cross-reference annotations (e.g. `/1.13B`) are completely missing.
 
-## KiCad Version
+# KiCad Version
 
 ```
 Application: KiCad x64 on x64
@@ -467,7 +467,7 @@ Locale:
 **Module:** `eeschema/importers/schematic_eagle_plugin.cpp`  
 **Labels:** `Eagle import`, `enhancement`, `eeschema`, `title block`
 
-## Description
+# Description
 
 EAGLE title block symbols use placeholder attributes of the form `>VARIABLENAME` (e.g. `>DATUM`, `>KUNDE`, `>FUNKTION`, `>ZEICHNUNGS_NR`, `>ERSTELLER`). In EAGLE, these placeholders are dynamically replaced by schematic attribute values.
 
@@ -479,14 +479,14 @@ Upon importing into KiCad, these literal strings (`>DATUM`, `>BEARBEITET`, etc.)
 - `>FUNKTION` / `>KUNDE` -> `Title` / `Company`
 - `>ERSTELLER` / `>BEARBEITET` -> `Comment 1`
 
-## Steps to reproduce
+# Steps to reproduce
 
 1. Open KiCad Schematic Editor.
 2. Import an EAGLE schematic containing a title block symbol with `>VARIABLE` placeholders.
 3. Inspect the imported title block.
 4. Notice that raw text strings like `>DATUM` or `>BEARBEITET` appear as unexpanded text in the schematic.
 
-## KiCad Version
+# KiCad Version
 
 ```
 Application: KiCad x64 on x64
@@ -525,7 +525,7 @@ Locale:
 **Module:** `eeschema/importers/schematic_eagle_plugin.cpp`  
 **Labels:** `Eagle import`, `bug`, `eeschema`
 
-## Description
+# Description
 
 EAGLE symbols for motor circuit breakers use IEC-standardized contact numbers `95`, `96` (NC) and `97`, `98` (NO) for the thermal overload release mechanism.
 
@@ -533,14 +533,14 @@ After importing into KiCad, these pin numbers are garbled into ASCII characters 
 
 **Expected behavior:** Pin numbers `95`, `96`, `97`, `98` should be preserved as literal string pin numbers "95", "96", "97", "98".
 
-## Steps to reproduce
+# Steps to reproduce
 
 1. Open KiCad Schematic Editor.
 2. Import an EAGLE schematic containing motor protection switch symbols with contacts 95-98.
 3. Inspect the auxiliary contact pin numbers of the motor protection switch.
 4. Notice that pin numbers appear as garbled ASCII characters (e.g. `:`, `;`, `<`, `=`).
 
-## KiCad Version
+# KiCad Version
 
 ```
 Application: KiCad x64 on x64
@@ -579,7 +579,7 @@ Locale:
 **Module:** `eeschema/importers/schematic_eagle_plugin.cpp`  
 **Labels:** `Eagle import`, `bug`, `eeschema`
 
-## Description
+# Description
 
 The three-phase AC notation string `3~` in EAGLE motor symbols (`M 3~`) is rendered as `3~~` after importing into KiCad.
 
@@ -587,14 +587,14 @@ Because the tilde (`~`) character is used as an overbar formatting prefix in KiC
 
 **Expected behavior:** The text literal `3~` should be properly escaped during import so that it renders as `3~`.
 
-## Steps to reproduce
+# Steps to reproduce
 
 1. Open KiCad Schematic Editor.
 2. Import an EAGLE schematic containing a 3-phase motor symbol (`M 3~`).
 3. Inspect the motor symbol label.
 4. Notice the text renders as `3~~` instead of `3~`.
 
-## KiCad Version
+# KiCad Version
 
 ```
 Application: KiCad x64 on x64
@@ -633,7 +633,7 @@ Locale:
 **Module:** `eeschema/importers/schematic_eagle_plugin.cpp` + `eeschema` (Feature Request)  
 **Labels:** `Eagle import`, `enhancement`, `eeschema`, `multi-sheet`
 
-## Description
+# Description
 
 For multi-page schematics, EAGLE automatically places inter-sheet net cross-references at wire ends in the format `NETNAME/SHEET.COLUMNROW` (e.g. `L1/1.18A`, `L1/2.2A`, `N/1.18F`, `PE/2.1F`). These cross-references are normatively required by DIN EN 61082 / IEC 61082 for industrial electrical schematics.
 
@@ -643,14 +643,14 @@ Upon importing into KiCad, these inter-sheet net cross-references are completely
 1. Short term: Import EAGLE net cross-reference labels as text annotations at wire ends.
 2. Long term: KiCad feature request for automatic inter-sheet net cross-references displaying sheet number and grid coordinates.
 
-## Steps to reproduce
+# Steps to reproduce
 
 1. Open KiCad Schematic Editor.
 2. Import a multi-page EAGLE schematic (`.sch`) containing cross-page nets (e.g. L1, L2, L3, N, PE).
 3. Inspect the wire ends crossing between sheet 1 and sheet 2.
 4. Notice that cross-reference labels (e.g. `L1/1.18A`) are missing entirely.
 
-## KiCad Version
+# KiCad Version
 
 ```
 Application: KiCad x64 on x64
@@ -689,7 +689,7 @@ Locale:
 **Module:** `kicad-cli` / `eeschema/sch_io/kicad_sexpr/`  
 **Labels:** `kicad-cli`, `bug`, `eeschema`, `regression`
 
-## Description
+# Description
 
 KiCad stores inter-sheet cross-references as property `${INTERSHEET_REFS}` in `.kicad_sch` files. In the KiCad GUI, these variables are correctly expanded and printed when `intersheets_ref_show: true` is set in the project file.
 
@@ -697,7 +697,7 @@ However, the CLI exporter (`kicad-cli sch export pdf`) does **not** expand `${IN
 
 **Expected behavior:** `kicad-cli sch export pdf` should expand `${INTERSHEET_REFS}` variables identically to GUI PDF export.
 
-## Steps to reproduce
+# Steps to reproduce
 
 1. Prepare a multi-sheet project with `intersheets_ref_show: true` in `.kicad_pro` and `(hide no)` on `Intersheetrefs` properties in `.kicad_sch`.
 2. Run command line export:
@@ -705,7 +705,7 @@ However, the CLI exporter (`kicad-cli sch export pdf`) does **not** expand `${IN
 3. Open `out.pdf` and check inter-sheet reference fields.
 4. Notice that `${INTERSHEET_REFS}` fields are empty in the CLI-exported PDF, whereas GUI export displays them correctly.
 
-## KiCad Version
+# KiCad Version
 
 ```
 Application: KiCad x64 on x64
@@ -744,7 +744,7 @@ Locale:
 **Module:** `eeschema/importers/schematic_eagle_plugin.cpp`  
 **Labels:** `Eagle import`, `bug`, `eeschema`
 
-## Description
+# Description
 
 When importing an EAGLE schematic containing a drawing frame symbol (e.g. `RAHMEN_A4_8Z-19S`), the EAGLE importer performs two conflicting actions simultaneously:
 1. Sets page dimensions `(paper "User" 322.88 244.27)` triggering KiCad's internal page border rendering.
@@ -754,14 +754,14 @@ As a result, KiCad renders **two overlapping frames** (KiCad's built-in page bor
 
 **Expected behavior:** The importer should either suppress KiCad's default page border (reference an empty `.kicad_wks`) or populate KiCad's title block without importing the frame symbol as a graphic component.
 
-## Steps to reproduce
+# Steps to reproduce
 
 1. Import an EAGLE schematic containing a drawing frame symbol into KiCad.
 2. Export PDF via GUI or `kicad-cli sch export pdf`.
 3. Open exported PDF or view schematic editor canvas.
 4. Notice duplicate overlapping drawing frames.
 
-## KiCad Version
+# KiCad Version
 
 ```
 Application: KiCad x64 on x64
@@ -800,7 +800,7 @@ Locale:
 **Module:** `eeschema` / net navigation  
 **Labels:** `eeschema`, `enhancement`, `multi-sheet`
 
-## Description
+# Description
 
 KiCad's `${INTERSHEET_REFS}` variable lists **every other sheet** in the project where a label with the same net name exists, regardless of wire topology or whether the net actually enters or exits that sheet.
 
@@ -808,14 +808,14 @@ In a 6-page project where a common net (such as PE or N) is present on all sheet
 
 **Expected behavior (EAGLE model):** Net cross-references should perform topological filtering, showing only sheets with direct wire connections along with grid coordinates (`NETNAME/SHEET.COLUMNROW`).
 
-## Steps to reproduce
+# Steps to reproduce
 
 1. Create or import a multi-sheet project (e.g. 6 sheets) with common net labels (e.g. PE, N) present on every sheet.
 2. Enable `intersheets_ref_show: true` and make `${INTERSHEET_REFS}` visible on net labels.
 3. Inspect net labels on sheet 1.
 4. Notice that page references list every sheet (`2 3 4 5 6`) indiscriminately.
 
-## KiCad Version
+# KiCad Version
 
 ```
 Application: KiCad x64 on x64
@@ -854,7 +854,7 @@ Locale:
 **Module:** `kicad-cli` / `eeschema`  
 **Labels:** `kicad-cli`, `enhancement`, `eeschema`, `multi-sheet`
 
-## Description
+# Description
 
 Running `kicad-cli sch export pdf --output out.pdf project_page1.kicad_sch` exports only the specified schematic file. If a project consists of multiple independent ("flat") top-level sheets (the standard structure produced by the EAGLE importer), all other project sheets are ignored.
 
@@ -862,14 +862,14 @@ In contrast, the KiCad GUI Page Navigator recognizes all project sheets and plot
 
 **Expected behavior:** `kicad-cli` should recognize all top-level sheets in a project (via `.kicad_pro`) and export them into a single multi-page PDF.
 
-## Steps to reproduce
+# Steps to reproduce
 
 1. Import a multi-page EAGLE project (producing `page1.kicad_sch`, `page2.kicad_sch` under `project.kicad_pro`).
 2. Run `kicad-cli sch export pdf --output out.pdf page1.kicad_sch`.
 3. Open `out.pdf`.
 4. Notice that `out.pdf` contains only page 1 instead of all project sheets.
 
-## KiCad Version
+# KiCad Version
 
 ```
 Application: KiCad x64 on x64
