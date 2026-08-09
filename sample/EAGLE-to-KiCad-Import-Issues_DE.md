@@ -31,8 +31,8 @@ Steuerstromkreis, Stern-Dreieck-Anlauf) mit folgenden Bauteilen:
 | EINSPEISUNG1 | Einspeisung 3/N/PE | e-klemmen |
 
 **Verwendete Eagle-Bibliotheken (eigene, elektrotechnische Spezial-Libs):**
--elektro-zeichnungsrahmen, -schalter, -sicherungen, -motorschutzschalter,
--schuetze-relais, -motoren, -klemmen
+e-elektro-zeichnungsrahmen, e-schalter, e-sicherungen, e-motorschutzschalter,
+e-schuetze-relais, e-motoren, e-klemmen
 
 ---
 
@@ -267,8 +267,8 @@ alle Blaetter -- kein topologisches Routing, keine Unterscheidung zwischen
 
 ### Issue 1 -- Component reference designators (F1, Q2, K1...) missing after Eagle import
 
-**Modul:** eschema/importers/schematic_eagle_plugin.cpp
-**Labels:** Eagle import, ug, eschema
+**Modul:** eeschema/importers/schematic_eagle_plugin.cpp
+**Labels:** Eagle import, ug, eeschema
 
 Eagle speichert Bauteilnamen auf Layer 95 (Names). Diese werden beim Import nicht
 als Referenz-Designatoren in KiCad-Symbole uebernommen.
@@ -277,8 +277,8 @@ als Referenz-Designatoren in KiCad-Symbole uebernommen.
 
 ### Issue 2 -- Cross-references (/%S.%C%R format) not imported from Eagle
 
-**Modul:** eschema/importers/schematic_eagle_plugin.cpp
-**Labels:** Eagle import, nhancement, eschema
+**Modul:** eeschema/importers/schematic_eagle_plugin.cpp
+**Labels:** Eagle import, enhancement, eeschema
 
 Eagles xreflabel/xrefpart Querverweissystem hat kein direktes KiCad-Aequivalent.
 Als Workaround sollten diese zumindest als **Textannotationen** am jeweiligen Pin
@@ -288,8 +288,8 @@ erhalten bleiben, statt komplett verloren zu gehen.
 
 ### Issue 3 -- Title block variables (>DATUM, >KUNDE...) not mapped to KiCad title block fields
 
-**Modul:** eschema/importers/schematic_eagle_plugin.cpp
-**Labels:** Eagle import, nhancement, eschema, 	itle block
+**Modul:** eeschema/importers/schematic_eagle_plugin.cpp
+**Labels:** Eagle import, enhancement, eeschema, 	itle block
 
 Eagle-Titelblock-Platzhalter >VARIABLENNAME sollten auf KiCad-Titelblockfelder
 gemappt werden:
@@ -305,8 +305,8 @@ gemappt werden:
 
 ### Issue 4 -- Pin numbers encoded as ASCII offset, garbled characters instead of 95-98
 
-**Modul:** eschema/importers/schematic_eagle_plugin.cpp
-**Labels:** Eagle import, ug, eschema
+**Modul:** eeschema/importers/schematic_eagle_plugin.cpp
+**Labels:** Eagle import, ug, eeschema
 
 IEC-Kontaktnummern 95-98 (Motorschutzschalter-Hilfskontakte) werden als
 ASCII-Zeichen :;<=>?@ ausgegeben. Vermutlicher Encoding-Bug: numerische
@@ -316,8 +316,8 @@ Pin-Bezeichner werden faelschlicherweise um 48 oder 32 verschoben.
 
 ### Issue 5 -- AC tilde notation doubled: 3~ becomes 3~~ in motor symbol
 
-**Modul:** eschema/importers/schematic_eagle_plugin.cpp
-**Labels:** Eagle import, ug, eschema
+**Modul:** eeschema/importers/schematic_eagle_plugin.cpp
+**Labels:** Eagle import, ug, eeschema
 
 Das Eagle-Literal ~ im Motor-Symbol (M 3~) wird nicht escaped, obwohl ~ in
 KiCad als Overbar-Sonderzeichen verwendet wird. Ergebnis: 3~~ statt 3~.
@@ -326,8 +326,8 @@ KiCad als Overbar-Sonderzeichen verwendet wird. Ergebnis: 3~~ statt 3~.
 
 ### Issue 6 -- Multi-page net cross-references (L1/1.18A, N/2.1F...) not imported and not supported
 
-**Modul:** eschema/importers/schematic_eagle_plugin.cpp + eschema (Feature Request)
-**Labels:** Eagle import, nhancement, eschema, multi-sheet
+**Modul:** eeschema/importers/schematic_eagle_plugin.cpp + eeschema (Feature Request)
+**Labels:** Eagle import, enhancement, eeschema, multi-sheet
 
 Eagle erzeugt bei mehrseitigen Plaenen fuer jedes seitenuebergreifende Netz automatisch
 Kommentare der Form NETZNAME/BLATT.SPALTEREIHE direkt am Drahtende.
@@ -349,8 +349,8 @@ automatische seitenuebergreifende Netz-Querverweise mit Koordinatenangabe noetig
 
 ### Issue 7 -- kicad-cli sch export pdf does not expand  variable
 
-**Modul:** kicad-cli / eschema/sch_io/kicad_sexpr/
-**Labels:** kicad-cli, ug, eschema, 
+**Modul:** kicad-cli / eeschema/sch_io/kicad_sexpr/
+**Labels:** kicad-cli, ug, eeschema, 
 egression
 
 **Beschreibung:**
