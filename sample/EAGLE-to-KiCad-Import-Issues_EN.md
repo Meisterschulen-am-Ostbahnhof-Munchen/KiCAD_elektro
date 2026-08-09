@@ -476,6 +476,41 @@ kicad-cli sch export pdf --exclude-drawing-sheet --output out.pdf project.kicad_
 
 ---
 
+### Issue 9 -- Inter-sheet net references show all pages instead of only connected pages
+
+**Module:** `eeschema` / net navigation
+**Labels:** `eeschema`, `enhancement`, `multi-sheet`
+
+**Description:**
+
+KiCad's `${INTERSHEET_REFS}` shows **all other sheets** on which a label with
+the same net name exists, regardless of whether the net actually enters or
+exits (wire end) that sheet or merely has another label there.
+
+**Reproduction:**
+
+Multi-page schematic with a net (e.g. PE, N, L1) that has labels on all sheets:
+
+- Sheet 1 shows: `2 3 4 5 6`
+- Sheet 2 shows: `1 3 4 5 6`
+- etc.
+
+**Expected behaviour (Eagle model):**
+
+Cross-references show only sheets with a **direct wire connection**,
+fully formatted as `NETNAME/SHEET.COLUMNROW` (e.g. `L1/3.4B`).
+
+**Impact:** On large schematics (6+ sheets) the current behaviour creates
+information overload instead of useful navigation and violates the requirements
+of **DIN EN 61082 / IEC 61082** for standards-compliant circuit diagrams.
+
+**Proposed fix:**
+- Topological evaluation: only show sheets where the net physically
+  enters or exits (wire end at sheet boundary)
+- Optionally: display column/row coordinate in addition to the sheet number
+
+---
+
 ## Note: Cross-References as a Core Function in Electrical Engineering
 
 Eagle's cross-reference system (`%F%N/%S.%C%R`) is fundamental for industrial

@@ -443,6 +443,43 @@ kicad-cli sch export pdf --exclude-drawing-sheet --output out.pdf projekt.kicad_
 
 ---
 
+### Issue 9 -- Inter-sheet net references show all pages instead of only connected pages
+
+**Modul:** eeschema / net navigation
+**Labels:** eeschema, enhancement, multi-sheet
+
+**Beschreibung:**
+
+KiCad's ${INTERSHEET_REFS} zeigt fuer jeden Net-Label **alle anderen Seiten**
+auf denen ein Label mit demselben Netzname existiert. Es wird keine Unterscheidung
+getroffen ob das Netz auf der jeweiligen Seite tatsaechlich ein- oder austritt
+(Drahtende) oder ob es sich nur um ein weiteres Label desselben Netzes handelt.
+
+**Reproduktion:**
+
+Mehrseitiger Schaltplan mit einem Netz (z. B. PE, N, L1) das auf allen Seiten
+als Label vorhanden ist:
+
+- Seite 1 zeigt: `2 3 4 5 6`
+- Seite 2 zeigt: `1 3 4 5 6`
+- usw.
+
+**Erwartetes Verhalten (Eagle-Vorbild):**
+
+Querverweise zeigen ausschliesslich Seiten mit **direkter Drahtverbindung**,
+vollstaendig im Format `NETZNAME/BLATT.SPALTEREIHE` (z. B. `L1/3.4B`).
+
+**Auswirkung:** Bei grossen Plaenen (6+ Seiten) erzeugt das aktuelle Verhalten
+Informationsflut statt nuetzlicher Navigation und verletzt die Anforderungen
+der **DIN EN 61082 / IEC 61082** fuer normgerechte Stromlaufplaene.
+
+**Vorgeschlagene Loesung:**
+- Topologische Auswertung: Nur Seiten anzeigen wo das Netz physisch
+  ein- oder austritt (Drahtende an Seite)
+- Optional: Koordinate (Spalte/Reihe) zusaetzlich zur Seitennummer anzeigen
+
+---
+
 ## Hinweis: Querverweise als Grundfunktion in der Elektrotechnik
 
 Eagles Querverweissystem (%F%N/%S.%C%R) ist fuer industrielle Stromlaufplaene
