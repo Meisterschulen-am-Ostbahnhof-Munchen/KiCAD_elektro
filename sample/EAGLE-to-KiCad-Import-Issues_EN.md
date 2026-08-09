@@ -335,20 +335,18 @@ hence the cleaner result.
 
 ## Summary
 
-| # | Problem | Severity | KiCad equivalent available? |
-|---|---------|----------|-----------------------------|
-| 1 | Component reference designators (F1, Q2...) missing | CRITICAL | Yes, but not mapped |
-| 2 | Cross-references (/1.13E...) missing | CRITICAL | No (no direct equivalent) |
-| 3 | Title block variables not translated | HIGH | Partial (KiCad title block fields) |
-| 4 | Auxiliary contact numbers 95-98 garbled | HIGH | Yes, encoding bug |
-| 5 | M 3~ becomes 3~~ | MEDIUM | Yes, escape bug |
-| 6 | Filename/drawing number missing | MEDIUM | Yes (KiCad title block fields) |
-| 7 | Net label concatenation L3+N | MEDIUM | Yes, parser bug |
-| 8 | Multi-page net cross-references missing | CRITICAL | No (missing KiCad feature) |
-| 9 | kicad-cli does not expand ${INTERSHEET_REFS} | HIGH | No (CLI bug) |
-| 10 | Duplicate drawing frame after import | HIGH | Yes, workaround: empty.kicad_wks |
-| 11 | Inter-sheet refs without hierarchy (all-to-all) | HIGH | No (fundamental KiCad design issue) |
-| 12 | kicad-cli ignores flat top-level sheets, Ghostscript workaround needed | HIGH | No (CLI architecture bug) |
+| # | Problem | Severity | KiCad equivalent available? | GitLab Issue |
+|---|---------|----------|-----------------------------|--------------|
+| 1 | Component reference designators (F1, Q2...) missing | CRITICAL | Yes, but not mapped | [#25189](https://gitlab.com/kicad/code/kicad/-/work_items/25189) |
+| 2 | Cross-references (/1.13E...) missing | CRITICAL | No (no direct equivalent) | [#25190](https://gitlab.com/kicad/code/kicad/-/work_items/25190) |
+| 3 | Title block variables not translated | HIGH | Partial (KiCad title block fields) | [#25191](https://gitlab.com/kicad/code/kicad/-/work_items/25191) |
+| 4 | Auxiliary contact numbers 95-98 garbled | HIGH | Yes, encoding bug | [#25192](https://gitlab.com/kicad/code/kicad/-/work_items/25192) |
+| 5 | M 3~ becomes 3~~ | MEDIUM | Yes, escape bug | [#25193](https://gitlab.com/kicad/code/kicad/-/work_items/25193) |
+| 6 | Multi-page net cross-references missing | CRITICAL | No (missing KiCad feature) | [#25194](https://gitlab.com/kicad/code/kicad/-/work_items/25194) |
+| 7 | kicad-cli does not expand ${INTERSHEET_REFS} | HIGH | No (CLI bug) | [#25195](https://gitlab.com/kicad/code/kicad/-/work_items/25195) |
+| 8 | Duplicate drawing frame after import | HIGH | Yes, workaround: empty.kicad_wks | [#25196](https://gitlab.com/kicad/code/kicad/-/work_items/25196) |
+| 9 | Inter-sheet refs without hierarchy (all-to-all) | HIGH | No (fundamental KiCad design issue) | [#25197](https://gitlab.com/kicad/code/kicad/-/work_items/25197) |
+| 10 | kicad-cli ignores flat top-level sheets, Ghostscript workaround needed | HIGH | No (CLI architecture bug) | [#25198](https://gitlab.com/kicad/code/kicad/-/work_items/25198) |
 
 ---
 
@@ -358,6 +356,7 @@ hence the cleaner result.
 
 **Module:** `eeschema/importers/schematic_eagle_plugin.cpp`  
 **Labels:** `Eagle import`, `bug`, `eeschema`
+**GitLab Issue:** [#25189](https://gitlab.com/kicad/code/kicad/-/work_items/25189)
 
 ## Description
 
@@ -412,6 +411,7 @@ Locale:
 
 **Module:** `eeschema/importers/schematic_eagle_plugin.cpp`  
 **Labels:** `Eagle import`, `enhancement`, `eeschema`
+**GitLab Issue:** [#25190](https://gitlab.com/kicad/code/kicad/-/work_items/25190)
 
 ## Description
 
@@ -466,6 +466,7 @@ Locale:
 
 **Module:** `eeschema/importers/schematic_eagle_plugin.cpp`  
 **Labels:** `Eagle import`, `enhancement`, `eeschema`, `title block`
+**GitLab Issue:** [#25191](https://gitlab.com/kicad/code/kicad/-/work_items/25191)
 
 ## Description
 
@@ -524,6 +525,7 @@ Locale:
 
 **Module:** `eeschema/importers/schematic_eagle_plugin.cpp`  
 **Labels:** `Eagle import`, `bug`, `eeschema`
+**GitLab Issue:** [#25192](https://gitlab.com/kicad/code/kicad/-/work_items/25192)
 
 ## Description
 
@@ -578,6 +580,7 @@ Locale:
 
 **Module:** `eeschema/importers/schematic_eagle_plugin.cpp`  
 **Labels:** `Eagle import`, `bug`, `eeschema`
+**GitLab Issue:** [#25193](https://gitlab.com/kicad/code/kicad/-/work_items/25193)
 
 ## Description
 
@@ -632,6 +635,7 @@ Locale:
 
 **Module:** `eeschema/importers/schematic_eagle_plugin.cpp` + `eeschema` (Feature Request)  
 **Labels:** `Eagle import`, `enhancement`, `eeschema`, `multi-sheet`
+**GitLab Issue:** [#25194](https://gitlab.com/kicad/code/kicad/-/work_items/25194)
 
 ## Description
 
@@ -688,6 +692,7 @@ Locale:
 
 **Module:** `kicad-cli` / `eeschema/sch_io/kicad_sexpr/`  
 **Labels:** `kicad-cli`, `bug`, `eeschema`, `regression`
+**GitLab Issue:** [#25195](https://gitlab.com/kicad/code/kicad/-/work_items/25195)
 
 ## Description
 
@@ -743,6 +748,7 @@ Locale:
 
 **Module:** `eeschema/importers/schematic_eagle_plugin.cpp`  
 **Labels:** `Eagle import`, `bug`, `eeschema`
+**GitLab Issue:** [#25196](https://gitlab.com/kicad/code/kicad/-/work_items/25196)
 
 ## Description
 
@@ -799,6 +805,7 @@ Locale:
 
 **Module:** `eeschema` / net navigation  
 **Labels:** `eeschema`, `enhancement`, `multi-sheet`
+**GitLab Issue:** [#25197](https://gitlab.com/kicad/code/kicad/-/work_items/25197)
 
 ## Description
 
@@ -853,6 +860,7 @@ Locale:
 
 **Module:** `kicad-cli` / `eeschema`  
 **Labels:** `kicad-cli`, `enhancement`, `eeschema`, `multi-sheet`
+**GitLab Issue:** [#25198](https://gitlab.com/kicad/code/kicad/-/work_items/25198)
 
 ## Description
 

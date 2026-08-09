@@ -287,20 +287,18 @@ ohne Zwischenschritt ausgeben -- daher das sauberere Ergebnis.
 
 ## Zusammenfassung
 
-| # | Problem | Schweregrad | KiCad-Aequivalent vorhanden? |
-|---|---------|-------------|------------------------------|
-| 1 | Bauteilbezeichnungen (F1, Q2...) fehlen | KRITISCH | Ja, aber nicht gemappt |
-| 2 | Querverweise (/1.13E...) fehlen | KRITISCH | Nein (kein direktes Aequivalent) |
-| 3 | Titelblock-Variablen nicht uebersetzt | HOCH | Teilweise (KiCad Titelblock-Felder) |
-| 4 | Hilfskontakt-Nummern 95-98 beschaedigt | HOCH | Ja, Encoding-Bug |
-| 5 | M 3~ wird zu 3~~ | MITTEL | Ja, Escape-Bug |
-| 6 | Dateiname/Zeichnungs-Nr. fehlt | MITTEL | Ja (KiCad Titelblockfelder) |
-| 7 | Netz-Label-Konkatenierung L3+N | MITTEL | Ja, Parser-Bug |
-| 8 | Seitenuebergreifende Netz-Querverweise fehlen | KRITISCH | Nein (KiCad-Feature fehlt grundlegend) |
-| 9 | kicad-cli expandiert ${INTERSHEET_REFS} nicht | HOCH | Nein (CLI-Bug) |
-| 10 | Doppelter Zeichnungsrahmen nach Import | HOCH | Ja, Workaround: empty.kicad_wks |
-| 11 | Seitenreferenzen ohne Hierarchie (alle auf alle) | HOCH | Nein (grundlegendes KiCad-Designproblem) |
-| 12 | kicad-cli ignoriert flat Top-Level-Sheets, Ghostscript-Workaround noetig | HOCH | Nein (CLI-Architektur-Bug) |
+| # | Problem | Schweregrad | KiCad-Aequivalent vorhanden? | GitLab Issue |
+|---|---------|-------------|------------------------------|--------------|
+| 1 | Bauteilbezeichnungen (F1, Q2...) fehlen | KRITISCH | Ja, aber nicht gemappt | [#25189](https://gitlab.com/kicad/code/kicad/-/work_items/25189) |
+| 2 | Querverweise (/1.13E...) fehlen | KRITISCH | Nein (kein direktes Aequivalent) | [#25190](https://gitlab.com/kicad/code/kicad/-/work_items/25190) |
+| 3 | Titelblock-Variablen nicht uebersetzt | HOCH | Teilweise (KiCad Titelblock-Felder) | [#25191](https://gitlab.com/kicad/code/kicad/-/work_items/25191) |
+| 4 | Hilfskontakt-Nummern 95-98 beschaedigt | HOCH | Ja, Encoding-Bug | [#25192](https://gitlab.com/kicad/code/kicad/-/work_items/25192) |
+| 5 | M 3~ wird zu 3~~ | MITTEL | Ja, Escape-Bug | [#25193](https://gitlab.com/kicad/code/kicad/-/work_items/25193) |
+| 6 | Multi-page Netz-Querverweise fehlen | KRITISCH | Nein (KiCad-Feature fehlt grundlegend) | [#25194](https://gitlab.com/kicad/code/kicad/-/work_items/25194) |
+| 7 | kicad-cli expandiert ${INTERSHEET_REFS} nicht | HOCH | Nein (CLI-Bug) | [#25195](https://gitlab.com/kicad/code/kicad/-/work_items/25195) |
+| 8 | Doppelter Zeichnungsrahmen nach Import | HOCH | Ja, Workaround: empty.kicad_wks | [#25196](https://gitlab.com/kicad/code/kicad/-/work_items/25196) |
+| 9 | Seitenreferenzen ohne Hierarchie (alle auf alle) | HOCH | Nein (grundlegendes KiCad-Designproblem) | [#25197](https://gitlab.com/kicad/code/kicad/-/work_items/25197) |
+| 10 | kicad-cli ignoriert flat Top-Level-Sheets | HOCH | Nein (CLI-Architektur-Bug) | [#25198](https://gitlab.com/kicad/code/kicad/-/work_items/25198) |
 
 ---
 
@@ -310,6 +308,7 @@ ohne Zwischenschritt ausgeben -- daher das sauberere Ergebnis.
 
 **Modul:** eeschema/importers/schematic_eagle_plugin.cpp
 **Labels:** Eagle import, ug, eeschema
+**GitLab Issue:** [#25189](https://gitlab.com/kicad/code/kicad/-/work_items/25189)
 
 Eagle speichert Bauteilnamen auf Layer 95 (Names). Diese werden beim Import nicht
 als Referenz-Designatoren in KiCad-Symbole uebernommen.
@@ -320,6 +319,7 @@ als Referenz-Designatoren in KiCad-Symbole uebernommen.
 
 **Modul:** eeschema/importers/schematic_eagle_plugin.cpp
 **Labels:** Eagle import, enhancement, eeschema
+**GitLab Issue:** [#25190](https://gitlab.com/kicad/code/kicad/-/work_items/25190)
 
 Eagles xreflabel/xrefpart Querverweissystem hat kein direktes KiCad-Aequivalent.
 Als Workaround sollten diese zumindest als **Textannotationen** am jeweiligen Pin
@@ -331,6 +331,7 @@ erhalten bleiben, statt komplett verloren zu gehen.
 
 **Modul:** eeschema/importers/schematic_eagle_plugin.cpp
 **Labels:** Eagle import, enhancement, eeschema, 	itle block
+**GitLab Issue:** [#25191](https://gitlab.com/kicad/code/kicad/-/work_items/25191)
 
 Eagle-Titelblock-Platzhalter >VARIABLENNAME sollten auf KiCad-Titelblockfelder
 gemappt werden:
@@ -348,6 +349,7 @@ gemappt werden:
 
 **Modul:** eeschema/importers/schematic_eagle_plugin.cpp
 **Labels:** Eagle import, ug, eeschema
+**GitLab Issue:** [#25192](https://gitlab.com/kicad/code/kicad/-/work_items/25192)
 
 IEC-Kontaktnummern 95-98 (Motorschutzschalter-Hilfskontakte) werden als
 ASCII-Zeichen :;<=>?@ ausgegeben. Vermutlicher Encoding-Bug: numerische
@@ -359,6 +361,7 @@ Pin-Bezeichner werden faelschlicherweise um 48 oder 32 verschoben.
 
 **Modul:** eeschema/importers/schematic_eagle_plugin.cpp
 **Labels:** Eagle import, ug, eeschema
+**GitLab Issue:** [#25193](https://gitlab.com/kicad/code/kicad/-/work_items/25193)
 
 Das Eagle-Literal ~ im Motor-Symbol (M 3~) wird nicht escaped, obwohl ~ in
 KiCad als Overbar-Sonderzeichen verwendet wird. Ergebnis: 3~~ statt 3~.
@@ -369,6 +372,7 @@ KiCad als Overbar-Sonderzeichen verwendet wird. Ergebnis: 3~~ statt 3~.
 
 **Modul:** eeschema/importers/schematic_eagle_plugin.cpp + eeschema (Feature Request)
 **Labels:** Eagle import, enhancement, eeschema, multi-sheet
+**GitLab Issue:** [#25194](https://gitlab.com/kicad/code/kicad/-/work_items/25194)
 
 Eagle erzeugt bei mehrseitigen Plaenen fuer jedes seitenuebergreifende Netz automatisch
 Kommentare der Form NETZNAME/BLATT.SPALTEREIHE direkt am Drahtende.
@@ -392,6 +396,7 @@ automatische seitenuebergreifende Netz-Querverweise mit Koordinatenangabe noetig
 
 **Modul:** `kicad-cli` / `eeschema/sch_io/kicad_sexpr/`  
 **Labels:** `kicad-cli`, `bug`, `eeschema`, `regression`
+**GitLab Issue:** [#25195](https://gitlab.com/kicad/code/kicad/-/work_items/25195)
 
 **Beschreibung:**
 
@@ -428,6 +433,7 @@ Die GUI loest `${INTERSHEET_REFS}` korrekt auf.
 
 **Modul:** eeschema/importers/schematic_eagle_plugin.cpp
 **Labels:** Eagle import, bug, eeschema
+**GitLab Issue:** [#25196](https://gitlab.com/kicad/code/kicad/-/work_items/25196)
 
 **Beschreibung:**
 
@@ -487,6 +493,7 @@ kicad-cli sch export pdf --exclude-drawing-sheet --output out.pdf projekt.kicad_
 
 **Modul:** eeschema / net navigation
 **Labels:** eeschema, enhancement, multi-sheet
+**GitLab Issue:** [#25197](https://gitlab.com/kicad/code/kicad/-/work_items/25197)
 
 **Beschreibung:**
 
@@ -524,6 +531,7 @@ der **DIN EN 61082 / IEC 61082** fuer normgerechte Stromlaufplaene.
 
 **Modul:** `kicad-cli` / `eeschema`  
 **Labels:** `kicad-cli`, `enhancement`, `eeschema`, `multi-sheet`
+**GitLab Issue:** [#25198](https://gitlab.com/kicad/code/kicad/-/work_items/25198)
 
 **Beschreibung:**
 

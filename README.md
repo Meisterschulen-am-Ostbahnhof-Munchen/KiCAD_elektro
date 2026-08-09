@@ -62,10 +62,10 @@ starter schematic converted from Eagle 7.7.0 to KiCad 10.0.5.
 | 🇩🇪 Deutsch | [EAGLE-to-KiCad-Import-Issues_DE.md](sample/EAGLE-to-KiCad-Import-Issues_DE.md) |
 | 🇬🇧 English | [EAGLE-to-KiCad-Import-Issues_EN.md](sample/EAGLE-to-KiCad-Import-Issues_EN.md) |
 
-**10 issues** documented, including 8 planned KiCad GitLab issues covering:
+**10 official KiCad GitLab issues** ([#25189](https://gitlab.com/kicad/code/kicad/-/work_items/25189) to [#25198](https://gitlab.com/kicad/code/kicad/-/work_items/25198)) submitted to the KiCad tracker covering:
 missing reference designators, lost cross-references, title block variable
 mapping, pin encoding bugs, tilde escaping, net label concatenation,
-missing inter-sheet cross-references, and duplicate drawing frames.
+missing inter-sheet cross-references, duplicate drawing frames, intersheet refs topology, and CLI multi-sheet export.
 
 ## License
 
