@@ -36,6 +36,7 @@ Each library has its own folder with a `README.md` listing all symbols as render
 | [e-stromversorgungselemente](e-stromversorgungselemente/README.md) | Power supply elements |
 | [e-symbole](e-symbole/README.md) | General symbols |
 | [eib-busch-jaeger](eib-busch-jaeger/README.md) | EIB / Busch-Jaeger |
+| [pneumatic](pneumatic/README.md) | Pneumatics |
 
 ## Credits
 
