@@ -68,6 +68,13 @@ missing reference designators, lost cross-references, title block variable
 mapping, pin encoding bugs, tilde escaping, net label concatenation,
 missing inter-sheet cross-references, duplicate drawing frames, intersheet refs topology, and CLI multi-sheet export.
 
+## Related Repositories
+
+Symbol libraries from related KiCad projects:
+
+- [Meisterschulen-am-Ostbahnhof-Munchen/kicad-symlib](https://github.com/Meisterschulen-am-Ostbahnhof-Munchen/kicad-symlib) — personal KiCad symbol library (PLC, hydraulics/pneumatics, standard symbols)
+- [realAscot/kicad-symlib](https://github.com/realAscot/kicad-symlib) — mirror/fork of the above
+
 ## License
 
 The original EAGLE library terms are reproduced verbatim in [`DESCRIPTION`](DESCRIPTION). See that file for the original author's licensing/disclaimer notice.
